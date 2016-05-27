@@ -13,7 +13,7 @@ why I created this module that implements "reverse inlines" for this
 use case.
 
 Work "shamelessly copied from":
-* [adminreverse](http://djangosnippets.org/snippets/2032/)
+* [adminreverse](https://github.com/rpkilby/django-reverse-admin)
 * [reverseadmin](http://djangosnippets.org/snippets/2032/)
 
 Made to work with django 1.9.6
