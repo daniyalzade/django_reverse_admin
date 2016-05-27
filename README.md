@@ -20,23 +20,24 @@ Made to work with django 1.9.6
 
 ## Example
 
+`models.py` file
 ```py
-    from django.db import models
-    class Address(models.Model):
-        street = models.CharField(max_length = 255)
-        zipcode = models.CharField(max_length=10)
-        city = models.CharField(max_length=255)
-    class Person(models.Model):
-        name = models.CharField(max_length = 255)
-        business_addr = models.ForeignKey(Address,
-                                             related_name = 'business_addr')
-        home_addr = models.OneToOneField(Address, related_name = 'home_addr')
-        other_addr = models.OneToOneField(Address, related_name = 'other_addr')
-This is how standard django admin renders it:
-    http://img9.imageshack.us/i/beforetz.png/
-Here is how it looks when using the reverseadmin module:
-    http://img408.imageshack.us/i/afterw.png/
-You use reverseadmin in the following way:
+
+from django.db import models
+class Address(models.Model):
+    street = models.CharField(max_length = 255)
+    zipcode = models.CharField(max_length=10)
+    city = models.CharField(max_length=255)
+class Person(models.Model):
+    name = models.CharField(max_length = 255)
+    business_addr = models.ForeignKey(Address,
+                                         related_name = 'business_addr')
+    home_addr = models.OneToOneField(Address, related_name = 'home_addr')
+    other_addr = models.OneToOneField(Address, related_name = 'other_addr')
+```
+
+`admin.py` file
+```py
     from django.contrib import admin
     from django.db import models
     from models import Person
