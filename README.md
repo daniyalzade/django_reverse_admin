@@ -41,7 +41,7 @@ class Person(models.Model):
     from django.contrib import admin
     from django.db import models
     from models import Person
-    from reverseadmin import ReverseModelAdmin
+    from django_reverse_admin import ReverseModelAdmin
     class AddressForm(models.Form):
         pass
     class PersonAdmin(ReverseModelAdmin):
