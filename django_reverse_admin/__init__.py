@@ -111,11 +111,11 @@ class ReverseInlineModelAdmin(InlineModelAdmin):
             "exclude": exclude,
             "formfield_callback": curry(self.formfield_for_dbfield, request=request),
         }
-        defaults.update(kwargs)
+        kwargs.update(defaults)
         return reverse_inlineformset_factory(self.parent_model,
                                              self.model,
                                              self.parent_fk_name,
-                                             **defaults)
+                                             **kwargs)
 
 class ReverseModelAdmin(ModelAdmin):
     '''
