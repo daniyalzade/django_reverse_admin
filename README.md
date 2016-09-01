@@ -48,7 +48,6 @@ class Person(models.Model):
         inline_type = 'tabular'
         inline_reverse = ['business_addr',
                           ('home_addr', {'fields': ['street', 'city', 'state', 'zip']}),
-                          ('other_addr', {'form': OtherForm, 'exclude': ()})
                           ]
     admin.site.register(Person, PersonAdmin)
 ```
