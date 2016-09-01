@@ -12,7 +12,7 @@ entity, django admins standard inline classes can't be used. Which is
 why I created this module that implements "reverse inlines" for this
 use case.
 
-Work "shamelessly copied from":
+Fix/extension of:
 * [adminreverse](https://github.com/rpkilby/django-reverse-admin)
 * [reverseadmin](http://djangosnippets.org/snippets/2032/)
 
@@ -46,10 +46,10 @@ class Person(models.Model):
         pass
     class PersonAdmin(ReverseModelAdmin):
         inline_type = 'tabular'
-        inline_reverse = ('business_addr', ('home_addr', AddressForm), ('other_addr' (
-            'form': OtherForm
-            'exclude': ()
-        )))
+        inline_reverse = ['business_addr',
+                          ('home_addr', {'fields': ['street', 'city', 'state', 'zip']}),
+                          ('other_addr', {'form': OtherForm, 'exclude': ()})
+                          ]
     admin.site.register(Person, PersonAdmin)
 ```
 

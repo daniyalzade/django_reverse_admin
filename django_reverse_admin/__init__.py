@@ -1,9 +1,10 @@
 #pylint: skip-file
 from django.contrib.admin import helpers, ModelAdmin
 from django.contrib.admin.options import InlineModelAdmin
+from django.contrib.admin.utils import flatten_fieldsets
 from django.db import models
 from django.db.models import OneToOneField, ForeignKey
-from django.forms import ModelForm
+from django.forms import ModelForm, ALL_FIELDS
 from django.forms.formsets import all_valid
 from django.forms.models import BaseModelFormSet, modelformset_factory
 from django.utils.encoding import force_unicode
@@ -18,7 +19,6 @@ class ReverseInlineFormSet(BaseModelFormSet):
     form. Since the formset is used to render a required OneToOne
     relation, the forms must not be empty.
     '''
-    model = None
     parent_fk_name = ''
     def __init__(self,
                  data=None,
@@ -27,7 +27,7 @@ class ReverseInlineFormSet(BaseModelFormSet):
                  prefix=None,
                  queryset=None,
                  save_as_new=False):
-        object = getattr(instance, self.parent_fk_name)
+        object = getattr(instance, self.parent_fk_name, None)
         if object:
             qs = self.model.objects.filter(pk=object.id)
         else:
@@ -46,6 +46,13 @@ def reverse_inlineformset_factory(parent_model,
                                   fields=None,
                                   exclude=None,
                                   formfield_callback=lambda f: f.formfield()):
+
+    if fields is None and exclude is None:
+        related_fields = [f for f in model._meta.get_fields() if
+                          (f.one_to_many or f.one_to_one) and
+                          f.auto_created and not f.concrete]
+        fields = [f.name for f in model._meta.get_fields() if f not in
+                  related_fields]  # ignoring reverse relations
     kwargs = {
         'form': form,
         'formfield_callback': formfield_callback,
@@ -128,7 +135,7 @@ class ReverseModelAdmin(ModelAdmin):
 
             kwargs = {}
             if isinstance(field_name, tuple):
-                kwargs['form'] = field_name[1]
+                kwargs = field_name[1]
                 field_name = field_name[0]
 
             field = model._meta.get_field(field_name)
