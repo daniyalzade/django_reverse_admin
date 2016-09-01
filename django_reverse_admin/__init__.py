@@ -84,15 +84,20 @@ class ReverseInlineModelAdmin(InlineModelAdmin):
         super(ReverseInlineModelAdmin, self).__init__(parent_model, admin_site)
 
     def get_formset(self, request, obj=None, **kwargs):
-        fields = None
-        self.exclude = []
-        if self.exclude is None:
-            exclude = []
+        if 'fields' in kwargs:
+            fields = kwargs.pop('fields')
+        elif self.get_fieldsets(request, obj):
+            fields = flatten_fieldsets(self.get_fieldsets(request, obj))
         else:
-            exclude = list(self.exclude)
-        # if exclude is an empty list we use None, since that's the actual
-        # default
-        exclude = (exclude + kwargs.get("exclude", [])) or None
+            fields = None
+
+        # want to combine exclude arguments - can't do that if they're None
+        # also, exclude starts as a tuple - need to make it a list
+        exclude = list(kwargs.get("exclude", []))
+        exclude_2 = self.exclude or []
+        # but need exclude to be None if result is an empty list
+        exclude = exclude.extend(list(exclude_2)) or None
+
         defaults = {
             "form": self.form,
             "fields": fields,
@@ -116,6 +121,7 @@ class ReverseModelAdmin(ModelAdmin):
         super(ReverseModelAdmin, self).__init__(model, admin_site)
         if self.exclude is None:
             self.exclude = []
+        self.exclude = list(self.exclude)
 
         inline_instances = []
         for field_name in self.inline_reverse:

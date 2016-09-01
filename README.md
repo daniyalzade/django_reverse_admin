@@ -16,7 +16,7 @@ Work "shamelessly copied from":
 * [adminreverse](https://github.com/rpkilby/django-reverse-admin)
 * [reverseadmin](http://djangosnippets.org/snippets/2032/)
 
-Made to work with django 1.9.6
+Made to work with django 1.10
 
 ## Example
 
@@ -56,6 +56,6 @@ class Person(models.Model):
 inline_type can be either "tabular" or "stacked" for tabular and
 stacked inlines respectively.
 
-The module is designed to work with Django 1.9.6. Since it hooks into
+The module is designed to work with Django 1.10. Since it hooks into
 the internals of the admin package, it may not work with later Django
 versions.
