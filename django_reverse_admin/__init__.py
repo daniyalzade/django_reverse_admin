@@ -4,7 +4,7 @@ from django.contrib.admin.options import InlineModelAdmin
 from django.contrib.admin.utils import flatten_fieldsets
 from django.db import models
 from django.db.models import OneToOneField, ForeignKey
-from django.forms import ModelForm, ALL_FIELDS
+from django.forms import ModelForm
 from django.forms.formsets import all_valid
 from django.forms.models import BaseModelFormSet, modelformset_factory
 from django.utils.encoding import force_unicode
