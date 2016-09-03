@@ -184,7 +184,7 @@ class ReverseModelAdmin(ModelAdmin):
                     prefix = "%s-%s" % (prefix, prefixes[prefix])
                 formset = FormSet(data=request.POST, files=request.FILES,
                                   instance=new_object,
-                                  save_as_new=request.POST.has_key("_saveasnew"),
+                                  save_as_new="_saveasnew" in request.POST,
                                   prefix=prefix)
                 formsets.append(formset)
             if all_valid(formsets) and form_validated:
@@ -235,7 +235,7 @@ class ReverseModelAdmin(ModelAdmin):
         context = {
             'title': _('Add %s') % force_text(opts.verbose_name),
             'adminform': adminForm,
-            #'is_popup': request.REQUEST.has_key('_popup'),
+            #'is_popup': '_popup' in request.REQUEST,
             'is_popup': False,
             'show_delete': False,
             'media': mark_safe(media),
