@@ -7,7 +7,7 @@ from django.db.models import OneToOneField, ForeignKey
 from django.forms import ModelForm
 from django.forms.formsets import all_valid
 from django.forms.models import BaseModelFormSet, modelformset_factory
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from django.utils.functional import curry
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
@@ -233,7 +233,7 @@ class ReverseModelAdmin(ModelAdmin):
             media = media + inline_admin_formset.media
 
         context = {
-            'title': _('Add %s') % force_unicode(opts.verbose_name),
+            'title': _('Add %s') % force_text(opts.verbose_name),
             'adminform': adminForm,
             #'is_popup': request.REQUEST.has_key('_popup'),
             'is_popup': False,
