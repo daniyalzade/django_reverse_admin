@@ -42,8 +42,8 @@ class Person(models.Model):
     from django.db import models
     from models import Person
     from django_reverse_admin import ReverseModelAdmin
-    class AddressForm(models.Form):
-        pass
+
+
     class PersonAdmin(ReverseModelAdmin):
         inline_type = 'tabular'
         inline_reverse = ['business_addr',
