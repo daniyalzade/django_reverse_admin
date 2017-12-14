@@ -1,12 +1,13 @@
 #pylint: skip-file
 from django.contrib.admin import helpers, ModelAdmin
 from django.contrib.admin.options import InlineModelAdmin
+from django.contrib.admin.utils import flatten_fieldsets
 from django.db import models
 from django.db.models import OneToOneField, ForeignKey
 from django.forms import ModelForm
 from django.forms.formsets import all_valid
 from django.forms.models import BaseModelFormSet, modelformset_factory
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from django.utils.functional import curry
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
@@ -18,7 +19,6 @@ class ReverseInlineFormSet(BaseModelFormSet):
     form. Since the formset is used to render a required OneToOne
     relation, the forms must not be empty.
     '''
-    model = None
     parent_fk_name = ''
     def __init__(self,
                  data=None,
@@ -27,7 +27,7 @@ class ReverseInlineFormSet(BaseModelFormSet):
                  prefix=None,
                  queryset=None,
                  save_as_new=False):
-        object = getattr(instance, self.parent_fk_name)
+        object = getattr(instance, self.parent_fk_name, None)
         if object:
             qs = self.model.objects.filter(pk=object.id)
         else:
@@ -46,6 +46,13 @@ def reverse_inlineformset_factory(parent_model,
                                   fields=None,
                                   exclude=None,
                                   formfield_callback=lambda f: f.formfield()):
+
+    if fields is None and exclude is None:
+        related_fields = [f for f in model._meta.get_fields() if
+                          (f.one_to_many or f.one_to_one) and
+                          f.auto_created and not f.concrete]
+        fields = [f.name for f in model._meta.get_fields() if f not in
+                  related_fields]  # ignoring reverse relations
     kwargs = {
         'form': form,
         'formfield_callback': formfield_callback,
@@ -84,26 +91,31 @@ class ReverseInlineModelAdmin(InlineModelAdmin):
         super(ReverseInlineModelAdmin, self).__init__(parent_model, admin_site)
 
     def get_formset(self, request, obj=None, **kwargs):
-        fields = None
-        self.exclude = []
-        if self.exclude is None:
-            exclude = []
+        if 'fields' in kwargs:
+            fields = kwargs.pop('fields')
+        elif self.get_fieldsets(request, obj):
+            fields = flatten_fieldsets(self.get_fieldsets(request, obj))
         else:
-            exclude = list(self.exclude)
-        # if exclude is an empty list we use None, since that's the actual
-        # default
-        exclude = (exclude + kwargs.get("exclude", [])) or None
+            fields = None
+
+        # want to combine exclude arguments - can't do that if they're None
+        # also, exclude starts as a tuple - need to make it a list
+        exclude = list(kwargs.get("exclude", []))
+        exclude_2 = self.exclude or []
+        # but need exclude to be None if result is an empty list
+        exclude = exclude.extend(list(exclude_2)) or None
+
         defaults = {
             "form": self.form,
             "fields": fields,
             "exclude": exclude,
             "formfield_callback": curry(self.formfield_for_dbfield, request=request),
         }
-        defaults.update(kwargs)
+        kwargs.update(defaults)
         return reverse_inlineformset_factory(self.parent_model,
                                              self.model,
                                              self.parent_fk_name,
-                                             **defaults)
+                                             **kwargs)
 
 class ReverseModelAdmin(ModelAdmin):
     '''
@@ -116,13 +128,14 @@ class ReverseModelAdmin(ModelAdmin):
         super(ReverseModelAdmin, self).__init__(model, admin_site)
         if self.exclude is None:
             self.exclude = []
+        self.exclude = list(self.exclude)
 
         inline_instances = []
         for field_name in self.inline_reverse:
 
             kwargs = {}
             if isinstance(field_name, tuple):
-                kwargs['form'] = field_name[1]
+                kwargs = field_name[1]
                 field_name = field_name[0]
 
             field = model._meta.get_field(field_name)
@@ -171,7 +184,7 @@ class ReverseModelAdmin(ModelAdmin):
                     prefix = "%s-%s" % (prefix, prefixes[prefix])
                 formset = FormSet(data=request.POST, files=request.FILES,
                                   instance=new_object,
-                                  save_as_new=request.POST.has_key("_saveasnew"),
+                                  save_as_new="_saveasnew" in request.POST,
                                   prefix=prefix)
                 formsets.append(formset)
             if all_valid(formsets) and form_validated:
@@ -220,9 +233,9 @@ class ReverseModelAdmin(ModelAdmin):
             media = media + inline_admin_formset.media
 
         context = {
-            'title': _('Add %s') % force_unicode(opts.verbose_name),
+            'title': _('Add %s') % force_text(opts.verbose_name),
             'adminform': adminForm,
-            #'is_popup': request.REQUEST.has_key('_popup'),
+            #'is_popup': '_popup' in request.REQUEST,
             'is_popup': False,
             'show_delete': False,
             'media': mark_safe(media),
