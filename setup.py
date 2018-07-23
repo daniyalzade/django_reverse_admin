@@ -4,6 +4,9 @@ setup(
     name='Django Reverse Admin',
     version='0.0.1',
     packages=['django_reverse_admin',],
-    license='Creative Commons Attribution-Noncommercial-Share Alike license',
+    license='BSD',
     long_description=open('README.md').read(),
+    classifiers=[
+        "License :: OSI Approved :: BSD License",
+    ]
 )
