@@ -61,3 +61,13 @@ stacked inlines respectively.
 The module is designed to work with Django 1.10. Since it hooks into
 the internals of the admin package, it may not work with later Django
 versions.
+
+## Contribtion
+
+* Create a PR for feature enhancements
+* Once a PR is merged, update version with the following commands:
+
+```
+bumpversion patch
+git push origin master --tags
+```
