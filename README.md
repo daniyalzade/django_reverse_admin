@@ -21,35 +21,38 @@ Made to work with django 1.10
 ## Example
 
 `models.py` file
-```py
 
+```py
 from django.db import models
+
 class Address(models.Model):
-    street = models.CharField(max_length = 255)
+    street = models.CharField(max_length=255)
     zipcode = models.CharField(max_length=10)
     city = models.CharField(max_length=255)
+    state = models.CharField(max_length=2)
+
 class Person(models.Model):
-    name = models.CharField(max_length = 255)
+    name = models.CharField(max_length=255)
     business_addr = models.ForeignKey(Address,
-                                         related_name = 'business_addr')
-    home_addr = models.OneToOneField(Address, related_name = 'home_addr')
-    other_addr = models.OneToOneField(Address, related_name = 'other_addr')
+                                      related_name='business_addr')
+    home_addr = models.OneToOneField(Address, related_name='home_addr')
+    other_addr = models.OneToOneField(Address, related_name='other_addr')
 ```
 
 `admin.py` file
+
 ```py
-    from django.contrib import admin
-    from django.db import models
-    from models import Person
-    from django_reverse_admin import ReverseModelAdmin
+from django.contrib import admin
+from django.db import models
+from models import Person
+from django_reverse_admin import ReverseModelAdmin
 
-
-    class PersonAdmin(ReverseModelAdmin):
-        inline_type = 'tabular'
-        inline_reverse = ['business_addr',
-                          ('home_addr', {'fields': ['street', 'city', 'state', 'zip']}),
-                          ]
-    admin.site.register(Person, PersonAdmin)
+class PersonAdmin(ReverseModelAdmin):
+    inline_type = 'tabular'
+    inline_reverse = ['business_addr',
+                      ('home_addr', {'fields': ['street', 'city', 'state', 'zipcode']}),
+                      ]
+admin.site.register(Person, PersonAdmin)
 ```
 
 inline_type can be either "tabular" or "stacked" for tabular and
@@ -58,3 +61,13 @@ stacked inlines respectively.
 The module is designed to work with Django 1.10. Since it hooks into
 the internals of the admin package, it may not work with later Django
 versions.
+
+## Contribtion
+
+* Create a PR for feature enhancements
+* Once a PR is merged, update version with the following commands:
+
+```
+bumpversion patch
+git push origin master --tags
+```
