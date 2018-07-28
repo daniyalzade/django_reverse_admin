@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(
-    name='Django Reverse Admin',
+    name='django_reverse_admin',
     version='0.0.4',
     packages=['django_reverse_admin',],
     license='BSD',
