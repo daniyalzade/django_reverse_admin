@@ -16,9 +16,20 @@ Fix/extension of:
 * [adminreverse](https://github.com/rpkilby/django-reverse-admin)
 * [reverseadmin](http://djangosnippets.org/snippets/2032/)
 
-Made to work with django 1.10
+# Requirements
 
-## Example
+* **Python**: 2.7
+* **Django**: 1.10
+
+# Installation
+
+Install using pip:
+
+```sh
+pip install django_reverse_admin
+```
+
+# Usage
 
 `models.py` file
 
@@ -62,7 +73,7 @@ The module is designed to work with Django 1.10. Since it hooks into
 the internals of the admin package, it may not work with later Django
 versions.
 
-## Contribtion
+# Contribtion
 
 * Create a PR for feature enhancements
 * Once a PR is merged, update version with the following commands:
