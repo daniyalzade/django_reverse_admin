@@ -14,6 +14,5 @@ jobs:
       - checkout
 
       - run: pip install --user tox && tox
-        environment:
-          # Tox is installed into local directory, so add that to path
-          PATH: ${PATH}:${HOME}/.local/bin
+          paths:
+            - "${HOME}/.local/bin"
