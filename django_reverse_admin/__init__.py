@@ -1,4 +1,3 @@
-#pylint: skip-file
 from django.contrib.admin import helpers, ModelAdmin
 from django.contrib.admin.options import InlineModelAdmin
 from django.contrib.admin.utils import flatten_fieldsets
@@ -13,6 +12,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.core.exceptions import PermissionDenied
 
+
 class ReverseInlineFormSet(BaseModelFormSet):
     '''
     A formset with either a single object or a single empty
@@ -20,6 +20,7 @@ class ReverseInlineFormSet(BaseModelFormSet):
     relation, the forms must not be empty.
     '''
     parent_fk_name = ''
+
     def __init__(self,
                  data=None,
                  files=None,
@@ -38,6 +39,7 @@ class ReverseInlineFormSet(BaseModelFormSet):
                                                    queryset=qs)
         for form in self.forms:
             form.empty_permitted = False
+
 
 def reverse_inlineformset_factory(parent_model,
                                   model,
@@ -67,6 +69,7 @@ def reverse_inlineformset_factory(parent_model,
     FormSet = modelformset_factory(model, **kwargs)
     FormSet.parent_fk_name = parent_fk_name
     return FormSet
+
 
 class ReverseInlineModelAdmin(InlineModelAdmin):
     '''
@@ -116,6 +119,7 @@ class ReverseInlineModelAdmin(InlineModelAdmin):
                                              self.model,
                                              self.parent_fk_name,
                                              **kwargs)
+
 
 class ReverseModelAdmin(ModelAdmin):
     '''
@@ -199,7 +203,7 @@ class ReverseModelAdmin(ModelAdmin):
                 for formset in formsets:
                     self.save_formset(request, form, formset, change=False)
 
-                #self.log_addition(request, new_object)
+                # self.log_addition(request, new_object)
                 return self.response_add(request, new_object)
         else:
             # Prepare the dict of initial data from the request.
@@ -235,13 +239,13 @@ class ReverseModelAdmin(ModelAdmin):
         context = {
             'title': _('Add %s') % force_text(opts.verbose_name),
             'adminform': adminForm,
-            #'is_popup': '_popup' in request.REQUEST,
+            # 'is_popup': '_popup' in request.REQUEST,
             'is_popup': False,
             'show_delete': False,
             'media': mark_safe(media),
             'inline_admin_formsets': inline_admin_formsets,
             'errors': helpers.AdminErrorList(form, formsets),
-            #'root_path': self.admin_site.root_path,
+            # 'root_path': self.admin_site.root_path,
             'app_label': opts.app_label,
         }
         context.update(extra_context or {})
