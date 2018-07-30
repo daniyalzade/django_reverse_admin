@@ -16,6 +16,8 @@ Fix/extension of:
 * [adminreverse](https://github.com/rpkilby/django-reverse-admin)
 * [reverseadmin](http://djangosnippets.org/snippets/2032/)
 
+[![CircleCI](https://circleci.com/gh/daniyalzade/django_reverse_admin.svg?style=svg)](https://circleci.com/gh/daniyalzade/django_reverse_admin)
+
 # Requirements
 
 * **Python**: 2.7
