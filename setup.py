@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='django_reverse_admin',
-    version='0.0.4',
+    version='0.0.5',
     packages=['django_reverse_admin',],
     license='BSD',
     long_description=open('README.md').read(),
