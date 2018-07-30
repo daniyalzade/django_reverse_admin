@@ -13,4 +13,4 @@ jobs:
     steps:
       - checkout
 
-      - run: pip install --user tox && tox
+      - run: pip install tox && tox
