@@ -14,5 +14,3 @@ jobs:
       - checkout
 
       - run: pip install --user tox && tox
-          paths:
-            - "${HOME}/.local/bin"
