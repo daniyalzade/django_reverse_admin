@@ -7,6 +7,10 @@ jobs:
   build:
     docker:
       - image: circleci/python:2.7
+
+    environment:
+      # Tox is installed into local directory, so add that to path
+      PATH: /home/circleci/.local/bin:$PATH
       
     working_directory: ~/repo
 
