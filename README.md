@@ -20,8 +20,10 @@ Fix/extension of:
 
 # Requirements
 
-* **Python**: 2.7
-* **Django**: 1.10
+* **Python**: 3.4, 3.5, 3.6, 3.7
+* **Django**: 2.0
+
+From Version 2.0 Django Filter is Python 3 only. If you need to support Python 2.7 use the version 1.0 release.
 
 # Installation
 
