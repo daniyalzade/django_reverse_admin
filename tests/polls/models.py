@@ -20,3 +20,8 @@ class Person(models.Model):
                                      )
     def __str__(self):
         return self.name
+
+class NonInlinePerson(Person):
+    class Meta:
+        proxy = True
+
