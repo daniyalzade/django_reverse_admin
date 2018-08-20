@@ -41,6 +41,18 @@ class ReverseInlineFormSet(BaseModelFormSet):
             form.empty_permitted = False
 
 
+def _formsets_are_blank(request, obj, formsets):
+    """
+    This function handles the blank/null inlines by checking whether the
+    non-valid formsets are both unchanged and are for inline fields.
+    """
+
+    for formset in formsets:
+        field = next((f for f in obj._meta.fields if f.name == formset.parent_fk_name), None)
+        if not field.blank or formset.has_changed():
+            return False
+    return True
+
 def reverse_inlineformset_factory(parent_model,
                                   model,
                                   parent_fk_name,
@@ -221,6 +233,9 @@ class ReverseModelAdmin(ModelAdmin):
                     self.save_formset(request, form, formset, change=False)
 
                 # self.log_addition(request, new_object)
+                return self.response_add(request, new_object)
+            elif form_validated and _formsets_are_blank(request, new_object, formsets):
+                self.save_model(request, new_object, form, change=False)
                 return self.response_add(request, new_object)
         else:
             # Prepare the dict of initial data from the request.
