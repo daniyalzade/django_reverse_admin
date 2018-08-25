@@ -40,6 +40,8 @@ class Person(TemporalBase):
                                      )
 
     def __str__(self):
+        if self.home_addr:
+            return '{} - {}'.format(self.name, self.home_addr)
         return self.name
 
 
