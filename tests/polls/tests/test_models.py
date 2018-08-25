@@ -3,6 +3,7 @@ from django.test import TestCase
 from polls.models import Address
 import polls.tests.config as test_config
 
+
 class AddressTest(TestCase):
 
     def test_address_creation(self):

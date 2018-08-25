@@ -1,17 +1,17 @@
 ADDRESS = {
-    'street':'Elm Street',
-    'street_2':'No 185',
-    'city':'New York City',
-    'state':'NY',
-    'zipcode':'10006'
+    'street': 'Elm Street',
+    'street_2': 'No 185',
+    'city': 'New York City',
+    'state': 'NY',
+    'zipcode': '10006'
 }
 
 ADDRESS_2 = {
-    'street':'South Park',
-    'street_2':'No 1',
-    'city':'San Francisco',
-    'state':'CA',
-    'zipcode':'94110'
+    'street': 'South Park',
+    'street_2': 'No 1',
+    'city': 'San Francisco',
+    'state': 'CA',
+    'zipcode': '94110'
 }
 
 ADMIN_USER = {
