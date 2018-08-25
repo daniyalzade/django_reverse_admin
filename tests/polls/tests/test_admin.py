@@ -39,9 +39,13 @@ class AddressAdminTest(TestCase):
         client.post(change_url, test_config.PERSON_WITH_ADDRESS)
         self.assertEquals(1, Person.objects.count())
 
-        # Edit the persons address now
+        ## Edit the persons address now
         change_url = reverse('admin:polls_person_change', args=(1,))
         client.post(change_url, test_config.PERSON_WITH_ADDRESS_2)
+        data = copy(test_config.PERSON_WITH_ADDRESS_2)
+        data['form-INITIAL_FORMS'] = 0
+        data['form-0-id'] = ''
+        response = client.post(change_url, data)
         self.assertEquals(1, Person.objects.count())
         self.assertEquals(1, Address.objects.count())
 
