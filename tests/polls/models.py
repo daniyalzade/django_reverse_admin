@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class TemporalBase(models.Model):
     """
     A base class that adds useful created_at and updated_at fields
