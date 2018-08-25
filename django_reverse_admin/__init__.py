@@ -105,8 +105,11 @@ class ReverseInlineModelAdmin(InlineModelAdmin):
         # also, exclude starts as a tuple - need to make it a list
         exclude = list(kwargs.get("exclude", []))
         exclude_2 = self.exclude or []
+        non_editable_fields = [f for f in self.model._meta.fields if not f.editable]
+        exclude.extend(list(exclude_2))
+        exclude.extend(non_editable_fields)
         # but need exclude to be None if result is an empty list
-        exclude = exclude.extend(list(exclude_2)) or None
+        exclude = exclude or None
 
         defaults = {
             "form": self.form,
