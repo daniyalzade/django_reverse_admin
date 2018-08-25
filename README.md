@@ -33,6 +33,14 @@ Install using pip:
 pip install django_reverse_admin
 ```
 
+# Testing
+
+Use `tox` for testing.
+
+```sh
+tox
+```
+
 # Usage
 
 `models.py` file
