@@ -69,9 +69,8 @@ admin.site.register(Person, PersonAdmin)
 inline_type can be either "tabular" or "stacked" for tabular and
 stacked inlines respectively.
 
-The module is designed to work with Django 1.10. Since it hooks into
-the internals of the admin package, it may not work with later Django
-versions.
+The module is designed to work with Django 1.7.4+. Earlier versions of
+django will not be supported
 
 # Contribtion
 

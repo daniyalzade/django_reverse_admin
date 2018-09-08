@@ -41,6 +41,25 @@ class ReverseInlineFormSet(BaseModelFormSet):
             form.empty_permitted = False
 
 
+def _get_remote_field(field):
+    # https://github.com/django-import-export/django-import-export/issues/434
+    if hasattr(field, 'remote_field'):
+        return field.remote_field
+    if hasattr(field, 'related_field'):
+        return field.related_field
+    raise RuntimeError('Unable to get remote field. Make sure you are using Django 1.7.5+')
+
+
+def _is_related_field(field):
+    if not field.auto_created:
+        return False
+    if hasattr(field, 'one_to_many') and hasattr(field, 'concrete') and hasattr(field, 'one_to_many'):
+        return (field.one_to_many or field.one_to_one) and field.concrete
+    # We are note handling is_related_field properly on django 1.7.5 since it
+    # doesn't have the meta fields that we need. See if we have to handle it.
+    return False
+
+
 def reverse_inlineformset_factory(parent_model,
                                   model,
                                   parent_fk_name,
@@ -50,10 +69,8 @@ def reverse_inlineformset_factory(parent_model,
                                   formfield_callback=lambda f: f.formfield()):
 
     if fields is None and exclude is None:
-        related_fields = [f for f in model._meta.get_fields() if
-                          (f.one_to_many or f.one_to_one) and
-                          f.auto_created and not f.concrete]
-        fields = [f.name for f in model._meta.get_fields() if f not in
+        related_fields = [f for f in model._meta.fields if _is_related_field(f)]
+        fields = [f.name for f in model._meta.fields if f not in
                   related_fields]  # ignoring reverse relations
     kwargs = {
         'form': form,
@@ -145,7 +162,7 @@ class ReverseModelAdmin(ModelAdmin):
             field = model._meta.get_field(field_name)
             if isinstance(field, (OneToOneField, ForeignKey)):
                 name = field.name
-                parent = field.remote_field.model
+                parent = _get_remote_field(field).model
                 inline = ReverseInlineModelAdmin(model,
                                                  name,
                                                  parent,
