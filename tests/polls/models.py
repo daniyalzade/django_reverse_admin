@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 
@@ -14,6 +16,7 @@ class TemporalBase(models.Model):
 
 
 class Address(TemporalBase):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     street = models.CharField(max_length=255)
     street_2 = models.CharField(max_length=255, blank=True, null=True)
     zipcode = models.CharField(max_length=10)
@@ -31,6 +34,7 @@ class Address(TemporalBase):
 
 
 class Person(TemporalBase):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     home_addr = models.OneToOneField(Address,
                                      blank=True,
