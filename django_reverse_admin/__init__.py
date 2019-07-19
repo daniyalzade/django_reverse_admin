@@ -213,8 +213,22 @@ class ReverseModelAdmin(ModelAdmin):
                 for formset, inline in zip(formsets, self.get_inline_instances(request)):
                     if not isinstance(inline, ReverseInlineModelAdmin):
                         continue
-                    obj = formset.save()[0]
-                    setattr(new_object, inline.parent_fk_name, obj)
+                    formsetresults = formset.save()
+                    #make sure that we have some results from formset.save()
+                    #could be empty if the formset is unchanged (with all default value)
+
+                    #if not empty, we create a new object from the formset data
+                    if(len(formsetresults)>0):
+                       obj = formsetresults[0]
+                       setattr(new_object, inline.parent_fk_name, obj)
+
+                    #if it is empty, we create a new object with all default value 
+                    else:
+                        field = next((f for f in new_object._meta.fields if f.name == formset.parent_fk_name), None)
+                        #create the related model with all default value
+                        obj = field.related_model.objects.create()
+                        setattr(new_object, inline.parent_fk_name, obj)
+
                 self.save_model(request, new_object, form, change=False)
                 form.save_m2m()
                 for formset in formsets:
