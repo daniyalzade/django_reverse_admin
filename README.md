@@ -1,16 +1,6 @@
 # Django Reverse Admin
 
-Module that makes django admin handle OneToOneFields in a better way.
-A common use case for one-to-one relationships is to "embed" a model
-inside another one. For example, a Person may have multiple foreign
-keys pointing to an Address entity, one home address, one business
-address and so on. Django admin displays those relations using select
-boxes, letting the user choose which address entity to connect to a
-person. A more natural way to handle the relationship is using
-inlines. However, since the foreign key is placed on the owning
-entity, django admins standard inline classes can't be used. Which is
-why I created this module that implements "reverse inlines" for this
-use case.
+Module that makes django admin handle OneToOneFields in a better way. A common use case for one-to-one relationships is to "embed" a model inside another one. For example, a Person may have multiple foreign keys pointing to an Address entity, one home address, one business address and so on. Django admin displays those relations using select boxes, letting the user choose which address entity to connect to a person. A more natural way to handle the relationship is using inlines. However, since the foreign key is placed on the owning entity, django admins standard inline classes can't be used. Which is why I created this module that implements "reverse inlines" for this use case.
 
 Fix/extension of:
 * [adminreverse](https://github.com/rpkilby/django-reverse-admin)
@@ -40,6 +30,21 @@ Use `tox` for testing.
 ```sh
 tox
 ```
+
+## Testing Manually Using Django Admin
+
+Run the following commands to make sure that db.sqlite3 has all the data that you need
+
+```sh
+cd tests
+python manage.py makemigrations
+python manage.py makemigrations polls
+python manage.py migrate
+python manage.py loaddata fixtures/init_data.json
+python manage.py runserver
+```
+
+Admin user username is `reverse` and password is `reverseadmin`
 
 # Usage
 
@@ -81,16 +86,23 @@ admin.site.register(Person, PersonAdmin)
 inline_type can be either "tabular" or "stacked" for tabular and
 stacked inlines respectively.
 
-The module is designed to work with Django 1.10. Since it hooks into
-the internals of the admin package, it may not work with later Django
-versions.
+The module is designed to work with Django 2+ Since it hooks into the internals of the admin package, it may not work with later Django versions.
 
 # Contribtion
 
+* Make sure that the tests are passing before opening up the PR
 * Create a PR for feature enhancements
 * Once a PR is merged, update version with the following commands:
 
 ```
 bumpversion patch
 git push origin master --tags
+```
+
+# Packaging
+
+`tox` creates a package in `.tox/dist`. Use twine to upload it to pypi:
+
+```sh
+twine upload .tox/dist/django_reverse_admin-*.zip
 ```
