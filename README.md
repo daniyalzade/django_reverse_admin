@@ -83,10 +83,17 @@ class PersonAdmin(ReverseModelAdmin):
 admin.site.register(Person, PersonAdmin)
 ```
 
-inline_type can be either "tabular" or "stacked" for tabular and
-stacked inlines respectively.
+inline_type can be either "tabular" or "stacked" for tabular and stacked inlines respectively.
 
 The module is designed to work with Django 2+ Since it hooks into the internals of the admin package, it may not work with later Django versions.
+
+# Demo
+
+Below is what an admin change_view with reverse inline looks like
+![reverse inline](/images/admin_with_reverse_inline.png)
+
+Below is what the same change_view would look like WITHOUT reverse inline
+![no reverse inline](/images/admin_without_reverse_inline.png)
 
 # Contribtion
 
