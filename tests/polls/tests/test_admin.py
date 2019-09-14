@@ -1,4 +1,3 @@
-from copy import copy
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test import Client
@@ -51,7 +50,6 @@ class PersonAdminTest(TestCase):
         change_url = reverse('admin:polls_person_change', args=(person.id,))
         test_config.PERSON_WITH_ADDRESS_2['form-0-id'] = person.home_addr.id
         client.post(change_url, test_config.PERSON_WITH_ADDRESS_2)
-        data = copy(test_config.PERSON_WITH_ADDRESS_2)
         self.assertEquals(1, Person.objects.count())
         self.assertEquals(1, Address.objects.count())
 
