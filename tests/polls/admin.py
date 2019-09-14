@@ -7,6 +7,7 @@ from django_reverse_admin import ReverseModelAdmin
 
 class PersonAdmin(ReverseModelAdmin):
     inline_type = 'tabular'
+    list_display = ('name', 'home_addr')
     inline_reverse = [('home_addr', {'fields': ['street', 'city', 'state', 'zipcode']}),
                       ]
 
