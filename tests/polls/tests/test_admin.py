@@ -52,9 +52,17 @@ class PersonAdminTest(TestCase):
         client.post(change_url, test_config.PERSON_WITH_ADDRESS_2)
         self.assertEquals(1, Person.objects.count())
         self.assertEquals(1, Address.objects.count())
-
         person = Person.objects.all()[0]
         self.assertEquals(person.home_addr.state, test_config.PERSON_WITH_ADDRESS_2['form-0-state'], 'but the address has changed')
+
+        # Edit and no changes
+        change_url = reverse('admin:polls_person_change', args=(person.id,))
+        test_config.PERSON_WITH_ADDRESS_2['form-0-id'] = person.home_addr.id
+        client.post(change_url, test_config.PERSON_WITH_ADDRESS_2)
+        self.assertEquals(1, Person.objects.count())
+        self.assertEquals(1, Address.objects.count())
+        person = Person.objects.all()[0]
+        self.assertEquals(person.home_addr.state, test_config.PERSON_WITH_ADDRESS_2['form-0-state'], 'address hasnt changed')
 
     def test_add_person_with_no_address(self):
         self.assertEquals(0, Person.objects.count())

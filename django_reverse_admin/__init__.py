@@ -240,7 +240,10 @@ class ReverseModelAdmin(ModelAdmin):
                                   save_as_new="_saveasnew" in request.POST,
                                   prefix=prefix)
                 formsets.append(formset)
-            if all_valid(formsets) and form_validated:
+            if form_validated and _formsets_are_blank(request, new_object, formsets):
+                self.save_model(request, new_object, form, change=not add)
+                return self.response_add(request, new_object)
+            elif form_validated and all_valid(formsets):
                 # Here is the modified code.
                 for formset, inline in zip(formsets, self.get_inline_instances(request)):
                     if not isinstance(inline, ReverseInlineModelAdmin):
@@ -255,9 +258,6 @@ class ReverseModelAdmin(ModelAdmin):
 
                 # self.log_addition(request, new_object)
                 return self.response_add(request, new_object)
-            elif form_validated and _formsets_are_blank(request, new_object, formsets):
-                self.save_model(request, new_object, form, change=not add)
-                return self.response_add(request, new_object)
         else:
             # Prepare the dict of initial data from the request.
             # We have to special-case M2Ms as a list of comma-separated PKs.
@@ -269,15 +269,19 @@ class ReverseModelAdmin(ModelAdmin):
                     continue
                 if isinstance(f, models.ManyToManyField):
                     initial[k] = initial[k].split(",")
-            form = model_form(initial=initial)
-            prefixes = {}
-            for FormSet, inline in self.get_formsets_with_inlines(request):
-                prefix = FormSet.get_default_prefix()
-                prefixes[prefix] = prefixes.get(prefix, 0) + 1
-                if prefixes[prefix] != 1:
-                    prefix = "%s-%s" % (prefix, prefixes[prefix])
-                formset = FormSet(instance=self.model(), prefix=prefix)
-                formsets.append(formset)
+            if add:
+                form = model_form(initial=initial)
+                prefixes = {}
+                for FormSet, inline in self.get_formsets_with_inlines(request):
+                    prefix = FormSet.get_default_prefix()
+                    prefixes[prefix] = prefixes.get(prefix, 0) + 1
+                    if prefixes[prefix] != 1:
+                        prefix = "%s-%s" % (prefix, prefixes[prefix])
+                    formset = FormSet(instance=self.model(), prefix=prefix)
+                    formsets.append(formset)
+            else:
+                form = model_form(instance=obj)
+                formsets, inline_instances = self._create_formsets(request, obj, change=True)
 
         adminForm = helpers.AdminForm(form, list(self.get_fieldsets(request)), self.prepopulated_fields)
         media = self.media + adminForm.media
