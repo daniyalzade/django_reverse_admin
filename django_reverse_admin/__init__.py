@@ -32,7 +32,7 @@ class ReverseInlineFormSet(BaseModelFormSet):
         if object:
             qs = self.model.objects.filter(pk=object.id)
         else:
-            qs = self.model.objects.filter(pk=-1)
+            qs = self.model.objects.none()
             self.extra = 1
         super(ReverseInlineFormSet, self).__init__(data, files,
                                                    prefix=prefix,

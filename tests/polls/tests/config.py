@@ -39,7 +39,6 @@ PERSON_WITH_ADDRESS_2 = {
     'form-INITIAL_FORMS': 1,
     'form-MIN_NUM_FORMS': 0,
     'form-MAX_NUM_FORMS': 1,
-    'form-0-id': 1,
     'form-0-street': 'South Park',
     'form-0-street_2': 'No 1',
     'form-0-city': 'San Francisco',
