@@ -55,3 +55,13 @@ class PersonAdminTest(TestCase):
 
         person = Person.objects.all()[0]
         self.assertEquals(person.home_addr.state, test_config.PERSON_WITH_ADDRESS_2['form-0-state'], 'but the address has changed')
+
+    def test_add_person_with_no_address(self):
+        self.assertEquals(0, Person.objects.count())
+
+        client = Client()
+        client.login(**test_config.ADMIN_USER)
+        change_url = reverse('admin:polls_person_add')
+        client.post(change_url, test_config.PERSON_WITH_NO_ADDRESS)
+        self.assertEquals(1, Person.objects.count())
+        self.assertEquals(0, Address.objects.count())

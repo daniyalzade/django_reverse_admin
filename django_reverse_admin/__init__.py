@@ -1,6 +1,6 @@
 from django.contrib.admin import helpers, ModelAdmin
 from django.contrib.admin.options import InlineModelAdmin
-from django.contrib.admin.utils import flatten_fieldsets
+from django.contrib.admin.utils import (flatten_fieldsets, unquote)
 from django.db import models
 from django.db.models import OneToOneField, ForeignKey
 from django.forms import ModelForm
@@ -41,6 +41,19 @@ class ReverseInlineFormSet(BaseModelFormSet):
             form.empty_permitted = False
 
 
+def _formsets_are_blank(request, obj, formsets):
+    """
+    This function handles the blank/null inlines by checking whether the
+    non-valid formsets are both unchanged and are for inline fields.
+    """
+
+    for formset in formsets:
+        field = next((f for f in obj._meta.fields if f.name == formset.parent_fk_name), None)
+        if not field.blank or formset.has_changed():
+            return False
+    return True
+
+
 def reverse_inlineformset_factory(parent_model,
                                   model,
                                   parent_fk_name,
@@ -51,8 +64,7 @@ def reverse_inlineformset_factory(parent_model,
 
     if fields is None and exclude is None:
         related_fields = [f for f in model._meta.get_fields() if
-                          (f.one_to_many or f.one_to_one) and
-                          f.auto_created and not f.concrete]
+                          (f.one_to_many or f.one_to_one) and f.auto_created and not f.concrete]
         fields = [f.name for f in model._meta.get_fields() if f not in
                   related_fields]  # ignoring reverse relations
     kwargs = {
@@ -76,6 +88,7 @@ class ReverseInlineModelAdmin(InlineModelAdmin):
     Use the name and the help_text of the owning models field to
     render the verbose_name and verbose_name_plural texts.
     '''
+
     def __init__(self,
                  parent_model,
                  parent_fk_name,
@@ -130,6 +143,7 @@ class ReverseModelAdmin(ModelAdmin):
     allow the reverse inline formsets to be saved before the parent
     model.
     '''
+
     def __init__(self, model, admin_site):
 
         super(ReverseModelAdmin, self).__init__(model, admin_site)
@@ -178,10 +192,14 @@ class ReverseModelAdmin(ModelAdmin):
         return self.tmp_inline_instances + super(ReverseModelAdmin, self).get_inline_instances(request, obj)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
-        return self.changeform_view(request, object_id, form_url, extra_context)
+        return self._changeform_view(request, object_id, form_url, extra_context)
 
     def add_view(self, request, form_url='', extra_context=None):
-        "The 'add' admin view for this model."
+        return self._changeform_view(request, None, form_url, extra_context)
+
+    def _changeform_view(self, request, object_id, form_url, extra_context):
+        add = object_id is None
+
         model = self.model
         opts = model._meta
         if not self.has_add_permission(request):
@@ -189,14 +207,28 @@ class ReverseModelAdmin(ModelAdmin):
 
         model_form = self.get_form(request)
         formsets = []
+
+        if add:
+            if not self.has_add_permission(request):
+                raise PermissionDenied
+            obj = None
+
+        else:
+            obj = self.get_object(request, unquote(object_id))
+
+            if not self.has_view_permission(request, obj) and not self.has_change_permission(request, obj):
+                raise PermissionDenied
+
+            if obj is None:
+                return self._get_obj_does_not_exist_redirect(request, opts, object_id)
+
         if request.method == 'POST':
-            form = model_form(request.POST, request.FILES)
-            if form.is_valid():
-                form_validated = True
-                new_object = self.save_form(request, form, change=False)
+            form = model_form(request.POST, request.FILES, instance=obj)
+            form_validated = form.is_valid()
+            if form_validated:
+                new_object = self.save_form(request, form, change=not add)
             else:
-                form_validated = False
-                new_object = self.model()
+                new_object = form.instance
             prefixes = {}
             for FormSet, inline in self.get_formsets_with_inlines(request):
                 prefix = FormSet.get_default_prefix()
@@ -213,14 +245,18 @@ class ReverseModelAdmin(ModelAdmin):
                 for formset, inline in zip(formsets, self.get_inline_instances(request)):
                     if not isinstance(inline, ReverseInlineModelAdmin):
                         continue
-                    obj = formset.save()[0]
+                    obj_list = formset.save()
+                    obj = obj_list[0] if obj_list else None
                     setattr(new_object, inline.parent_fk_name, obj)
-                self.save_model(request, new_object, form, change=False)
+                self.save_model(request, new_object, form, change=not add)
                 form.save_m2m()
                 for formset in formsets:
-                    self.save_formset(request, form, formset, change=False)
+                    self.save_formset(request, form, formset, change=not add)
 
                 # self.log_addition(request, new_object)
+                return self.response_add(request, new_object)
+            elif form_validated and _formsets_are_blank(request, new_object, formsets):
+                self.save_model(request, new_object, form, change=not add)
                 return self.response_add(request, new_object)
         else:
             # Prepare the dict of initial data from the request.
