@@ -64,8 +64,7 @@ def reverse_inlineformset_factory(parent_model,
 
     if fields is None and exclude is None:
         related_fields = [f for f in model._meta.get_fields() if
-                          (f.one_to_many or f.one_to_one) and
-                          f.auto_created and not f.concrete]
+                          (f.one_to_many or f.one_to_one) and f.auto_created and not f.concrete]
         fields = [f.name for f in model._meta.get_fields() if f not in
                   related_fields]  # ignoring reverse relations
     kwargs = {
@@ -89,6 +88,7 @@ class ReverseInlineModelAdmin(InlineModelAdmin):
     Use the name and the help_text of the owning models field to
     render the verbose_name and verbose_name_plural texts.
     '''
+
     def __init__(self,
                  parent_model,
                  parent_fk_name,
@@ -143,6 +143,7 @@ class ReverseModelAdmin(ModelAdmin):
     allow the reverse inline formsets to be saved before the parent
     model.
     '''
+
     def __init__(self, model, admin_site):
 
         super(ReverseModelAdmin, self).__init__(model, admin_site)
