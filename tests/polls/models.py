@@ -23,9 +23,6 @@ class Address(TemporalBase):
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=2)
 
-    def _person(self):
-        return self.person
-
     def __str__(self):
         street_2 = ''
         if self.street_2:
@@ -39,13 +36,31 @@ class Person(TemporalBase):
     home_addr = models.OneToOneField(Address,
                                      blank=True,
                                      null=True,
-                                     related_name='person',
+                                     related_name='home_addr_person',
                                      on_delete=models.CASCADE
                                      )
 
     def __str__(self):
-        if self.home_addr:
-            return '{} - {}'.format(self.name, self.home_addr)
+        return self.name
+
+
+class PersonWithTwoAddresses(TemporalBase):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    cur_addr = models.OneToOneField(Address,
+                                    blank=True,
+                                    null=True,
+                                    related_name='cur_addr_person',
+                                    on_delete=models.CASCADE
+                                    )
+    oth_addr = models.OneToOneField(Address,
+                                    blank=True,
+                                    null=True,
+                                    related_name='oth_addr_person',
+                                    on_delete=models.CASCADE
+                                    )
+
+    def __str__(self):
         return self.name
 
 

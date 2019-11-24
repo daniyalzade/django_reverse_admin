@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from polls.models import Address
 from polls.models import Person
+from polls.models import PersonWithTwoAddresses
 import polls.tests.config as test_config
 
 
@@ -73,3 +74,17 @@ class PersonAdminTest(TestCase):
         client.post(change_url, test_config.PERSON_WITH_NO_ADDRESS)
         self.assertEquals(1, Person.objects.count())
         self.assertEquals(0, Address.objects.count())
+
+
+class PersonWithTwoAddressesAdminTest(TestCase):
+    def setUp(self):
+        User.objects.create_superuser(**test_config.ADMIN_USER)
+
+    def test_add_person_with_two_addresses(self):
+        self.assertEquals(0, PersonWithTwoAddresses.objects.count())
+
+        client = Client()
+        client.login(**test_config.ADMIN_USER)
+        change_url = reverse('admin:polls_personwithtwoaddresses_add')
+        client.post(change_url, test_config.PERSON_WITH_TWO_ADDRESSES)
+        self.assertEquals(1, PersonWithTwoAddresses.objects.count())

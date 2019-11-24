@@ -248,8 +248,13 @@ class ReverseModelAdmin(ModelAdmin):
                 for formset, inline in zip(formsets, self.get_inline_instances(request)):
                     if not isinstance(inline, ReverseInlineModelAdmin):
                         continue
-                    obj_list = formset.save()
-                    obj = obj_list[0] if obj_list else None
+                    # The idea or this piece is coming from https://stackoverflow.com/questions/50910152/inline-formset-returns-empty-list-on-save.
+                    # Without this, formset.save() was returning None for forms that
+                    # haven't been modified
+                    forms = [f for f in formset]
+                    if not forms:
+                        continue
+                    obj = forms[0].save()
                     setattr(new_object, inline.parent_fk_name, obj)
                 self.save_model(request, new_object, form, change=not add)
                 form.save_m2m()
