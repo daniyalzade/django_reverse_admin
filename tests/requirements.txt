@@ -18,7 +18,7 @@ pytz==2019.2
 readme-renderer==24.0
 requests==2.22.0
 requests-toolbelt==0.9.1
-six==1.12.0
+six==1.13.0
 sqlparse==0.3.0
 tqdm==4.35.0
 twine==3.0.0
