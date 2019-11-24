@@ -8,15 +8,19 @@ from django_reverse_admin import ReverseModelAdmin
 
 class PersonAdmin(ReverseModelAdmin):
     inline_type = 'tabular'
-    list_display = ('name', 'home_addr')
+    list_display = ('name', 'age', 'home_addr')
+    readonly_fields = ('age',)
     inline_reverse = [
-        ('home_addr', {'fields': ['street', 'city', 'state', 'zipcode']}),
+        ('home_addr', {
+            'fields': ['street', 'city', 'state', 'zipcode'],
+            'readonly_fields': ('street',)
+        }),
     ]
 
 
 class PersonWithTwoAddressesAdmin(ReverseModelAdmin):
     inline_type = 'tabular'
-    list_display = ('name', 'cur_addr', 'oth_addr')
+    list_display = ('name', 'age', 'cur_addr', 'oth_addr')
     inline_reverse = [
         ('cur_addr', {'fields': ['street', 'city', 'state', 'zipcode']}),
         ('oth_addr', {'fields': ['street', 'city', 'state', 'zipcode']}),
@@ -28,6 +32,7 @@ class NonInlinePersonAdmin(admin.ModelAdmin):
 
 
 class AddressAdmin(admin.ModelAdmin):
+    readonly_fields = ('street',)
     list_display = ('created_at', 'updated_at', 'street', 'zipcode', 'city', 'state',
                     'home_addr_person',
                     'cur_addr_person',

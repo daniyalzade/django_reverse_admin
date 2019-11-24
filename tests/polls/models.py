@@ -33,6 +33,7 @@ class Address(TemporalBase):
 class Person(TemporalBase):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
+    age = models.IntegerField(blank=True, null=True)
     home_addr = models.OneToOneField(Address,
                                      blank=True,
                                      null=True,
@@ -47,6 +48,7 @@ class Person(TemporalBase):
 class PersonWithTwoAddresses(TemporalBase):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
+    age = models.IntegerField(blank=True, null=True)
     cur_addr = models.OneToOneField(Address,
                                     blank=True,
                                     null=True,
