@@ -298,7 +298,9 @@ class ReverseModelAdmin(ModelAdmin):
             inline_admin_formsets.append(inline_admin_formset)
             media = media + inline_admin_formset.media
 
-        context = {
+        # Inherit the default context from admin_site
+        context = self.admin_site.each_context(request)
+        reverse_admin_context = {
             'title': _('Add %s') % force_text(opts.verbose_name),
             'adminform': adminForm,
             # 'is_popup': '_popup' in request.REQUEST,
@@ -310,5 +312,6 @@ class ReverseModelAdmin(ModelAdmin):
             # 'root_path': self.admin_site.root_path,
             'app_label': opts.app_label,
         }
+        context.update(reverse_admin_context)
         context.update(extra_context or {})
         return self.render_change_form(request, context, form_url=form_url, add=True)
