@@ -39,3 +39,5 @@ admin.site.register(Person, PersonAdmin)
 admin.site.register(PersonWithTwoAddresses, PersonWithTwoAddressesAdmin)
 admin.site.register(NonInlinePerson, NonInlinePersonAdmin)
 admin.site.register(Address, AddressAdmin)
+admin.site.site_title = 'Reverse Admin Site Title'
+admin.site.site_header = 'Reverse Admin Site Header'
