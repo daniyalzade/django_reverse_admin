@@ -6,6 +6,10 @@ from polls.models import PersonWithTwoAddresses
 from django_reverse_admin import ReverseModelAdmin
 
 
+SITE_HEADER = 'Reverse Admin Site Header'
+SITE_TITLE = 'Reverse Admin Site Title'
+
+
 class PersonAdmin(ReverseModelAdmin):
     inline_type = 'tabular'
     list_display = ('name', 'home_addr')
@@ -39,3 +43,5 @@ admin.site.register(Person, PersonAdmin)
 admin.site.register(PersonWithTwoAddresses, PersonWithTwoAddressesAdmin)
 admin.site.register(NonInlinePerson, NonInlinePersonAdmin)
 admin.site.register(Address, AddressAdmin)
+admin.site.site_header = SITE_HEADER
+admin.site.site_title = SITE_TITLE
