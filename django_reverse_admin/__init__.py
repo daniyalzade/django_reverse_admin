@@ -288,7 +288,13 @@ class ReverseModelAdmin(ModelAdmin):
                 form = model_form(instance=obj)
                 formsets, inline_instances = self._create_formsets(request, obj, change=True)
 
-        adminForm = helpers.AdminForm(form, list(self.get_fieldsets(request)), self.prepopulated_fields)
+        readonly_fields = self.get_readonly_fields(request, obj)
+        adminForm = helpers.AdminForm(form,
+                                      list(self.get_fieldsets(request)),
+                                      self.prepopulated_fields,
+                                      readonly_fields=readonly_fields,
+                                      model_admin=self
+                                      )
         media = self.media + adminForm.media
 
         inline_admin_formsets = []
