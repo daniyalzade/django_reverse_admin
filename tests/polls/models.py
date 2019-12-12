@@ -66,6 +66,16 @@ class PersonWithTwoAddresses(TemporalBase):
         return self.name
 
 
+class PhoneNumber(TemporalBase):
+    person = models.ForeignKey(Person,
+                               on_delete=models.CASCADE
+                               )
+    number = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.number
+
+
 class NonInlinePerson(Person):
     class Meta:
         proxy = True

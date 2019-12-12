@@ -30,7 +30,9 @@ PERSON_WITH_ADDRESS = {
     'form-0-street_2': 'No 185',
     'form-0-city': 'New York City',
     'form-0-state': 'NY',
-    'form-0-zipcode': '10006'
+    'form-0-zipcode': '10006',
+    'phonenumber_set-TOTAL_FORMS': 0,
+    'phonenumber_set-INITIAL_FORMS': 1
 }
 
 PERSON_WITH_ADDRESS_2 = {
@@ -43,13 +45,17 @@ PERSON_WITH_ADDRESS_2 = {
     'form-0-street_2': 'No 1',
     'form-0-city': 'San Francisco',
     'form-0-state': 'CA',
-    'form-0-zipcode': '94110'
+    'form-0-zipcode': '94110',
+    'phonenumber_set-TOTAL_FORMS': 0,
+    'phonenumber_set-INITIAL_FORMS': 1
 }
 
 PERSON_WITH_NO_ADDRESS = {
     'name': 'Elmo',
     'form-TOTAL_FORMS': 1,
-    'form-INITIAL_FORMS': 0
+    'form-INITIAL_FORMS': 0,
+    'phonenumber_set-TOTAL_FORMS': 0,
+    'phonenumber_set-INITIAL_FORMS': 1
 }
 
 PERSON_WITH_TWO_ADDRESSES = {

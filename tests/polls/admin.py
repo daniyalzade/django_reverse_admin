@@ -3,6 +3,7 @@ from polls.models import Address
 from polls.models import NonInlinePerson
 from polls.models import Person
 from polls.models import PersonWithTwoAddresses
+from polls.models import PhoneNumber
 from django_reverse_admin import ReverseModelAdmin
 
 
@@ -10,10 +11,21 @@ SITE_HEADER = 'Reverse Admin Site Header'
 SITE_TITLE = 'Reverse Admin Site Title'
 
 
+class PhoneNumberAdmin(admin.ModelAdmin):
+    list_display = ('number',)
+
+
+class PhoneNumberInline(admin.TabularInline):
+    model = PhoneNumber
+
+
 class PersonAdmin(ReverseModelAdmin):
-    inline_type = 'tabular'
+    inline_type = "stacked"
     list_display = ('name', 'age', 'home_addr')
     readonly_fields = ('age',)
+    inlines = [
+        PhoneNumberInline
+    ]
     inline_reverse = [
         ('home_addr', {
             'fields': ['street', 'city', 'state', 'zipcode'],
@@ -46,6 +58,7 @@ class AddressAdmin(admin.ModelAdmin):
 
 admin.site.register(Person, PersonAdmin)
 admin.site.register(PersonWithTwoAddresses, PersonWithTwoAddressesAdmin)
+admin.site.register(PhoneNumber, PhoneNumberAdmin)
 admin.site.register(NonInlinePerson, NonInlinePersonAdmin)
 admin.site.register(Address, AddressAdmin)
 admin.site.site_header = SITE_HEADER
