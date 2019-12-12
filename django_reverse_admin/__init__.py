@@ -48,8 +48,11 @@ def _formsets_are_blank(request, obj, formsets):
     """
 
     for formset in formsets:
-        field = next((f for f in obj._meta.fields if f.name == formset.parent_fk_name), None)
-        if not field.blank or formset.has_changed():
+        if isinstance(formset, ReverseInlineFormSet):
+            field = next((f for f in obj._meta.fields if f.name == formset.parent_fk_name), None)
+            if not field.blank or formset.has_changed():
+                return False
+        elif formset.has_changed():
             return False
     return True
 
