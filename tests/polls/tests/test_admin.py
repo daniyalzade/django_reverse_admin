@@ -4,7 +4,9 @@ from django.test import Client
 from django.urls import reverse
 
 from polls.models import Address
+from polls.models import AddressNonId
 from polls.models import Person
+from polls.models import PersonWithAddressNonId
 from polls.models import PersonWithTwoAddresses
 from polls.admin import SITE_HEADER
 import polls.tests.config as test_config
@@ -75,6 +77,20 @@ class PersonAdminTest(TestCase):
         client.post(change_url, test_config.PERSON_WITH_NO_ADDRESS)
         self.assertEquals(1, Person.objects.count())
         self.assertEquals(0, Address.objects.count())
+
+
+class PersonWithAddressNonIdAdminTest(TestCase):
+    def setUp(self):
+        User.objects.create_superuser(**test_config.ADMIN_USER)
+
+    def test_edit_person_with_address_non_id(self):
+        person = PersonWithAddressNonId.objects.create(name='Toto', home_addr=AddressNonId.objects.create())
+
+        client = Client()
+        client.login(**test_config.ADMIN_USER)
+        change_url = reverse('admin:polls_personwithaddressnonid_change', args=(person.pk,))
+        # Ensure it doesn't raise any exception.
+        client.get(change_url, test_config.PERSON_WITH_TWO_ADDRESSES)
 
 
 class PersonWithTwoAddressesAdminTest(TestCase):

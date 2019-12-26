@@ -2,6 +2,7 @@ from django.contrib import admin
 from polls.models import Address
 from polls.models import NonInlinePerson
 from polls.models import Person
+from polls.models import PersonWithAddressNonId
 from polls.models import PersonWithTwoAddresses
 from polls.models import PhoneNumber
 from django_reverse_admin import ReverseModelAdmin
@@ -34,6 +35,13 @@ class PersonAdmin(ReverseModelAdmin):
     ]
 
 
+class PersonWithAddressNonIdAdmin(ReverseModelAdmin):
+    list_display = ('name', 'home_addr')
+
+    inline_type = 'stacked'
+    inline_reverse = ('home_addr',)
+
+
 class PersonWithTwoAddressesAdmin(ReverseModelAdmin):
     inline_type = 'tabular'
     list_display = ('name', 'age', 'cur_addr', 'oth_addr')
@@ -57,6 +65,7 @@ class AddressAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Person, PersonAdmin)
+admin.site.register(PersonWithAddressNonId, PersonWithAddressNonIdAdmin)
 admin.site.register(PersonWithTwoAddresses, PersonWithTwoAddressesAdmin)
 admin.site.register(PhoneNumber, PhoneNumberAdmin)
 admin.site.register(NonInlinePerson, NonInlinePersonAdmin)

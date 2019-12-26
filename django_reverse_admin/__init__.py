@@ -30,7 +30,7 @@ class ReverseInlineFormSet(BaseModelFormSet):
                  save_as_new=False):
         object = getattr(instance, self.parent_fk_name, None)
         if object:
-            qs = self.model.objects.filter(pk=object.id)
+            qs = self.model.objects.filter(pk=object.pk)
         else:
             qs = self.model.objects.none()
             self.extra = 1
