@@ -1,3 +1,4 @@
+from functools import partial
 from django.contrib.admin import helpers, ModelAdmin
 from django.contrib.admin.options import InlineModelAdmin
 from django.contrib.admin.utils import (flatten_fieldsets, unquote)
@@ -7,7 +8,6 @@ from django.forms import ModelForm
 from django.forms.formsets import all_valid
 from django.forms.models import BaseModelFormSet, modelformset_factory
 from django.utils.encoding import force_text
-from django.utils.functional import curry
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.core.exceptions import PermissionDenied
@@ -131,7 +131,7 @@ class ReverseInlineModelAdmin(InlineModelAdmin):
             "form": self.form,
             "fields": fields,
             "exclude": exclude,
-            "formfield_callback": curry(self.formfield_for_dbfield, request=request),
+            "formfield_callback": partial(self.formfield_for_dbfield, request=request),
         }
         kwargs.update(defaults)
         return reverse_inlineformset_factory(self.parent_model,
