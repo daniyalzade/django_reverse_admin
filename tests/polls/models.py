@@ -48,7 +48,7 @@ class Person(TemporalBase):
                                      blank=True,
                                      null=True,
                                      related_name='home_addr_person',
-                                     on_delete=models.CASCADE
+                                     on_delete=models.SET_NULL
                                      )
 
     def __str__(self):
