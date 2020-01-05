@@ -67,7 +67,7 @@ def reverse_inlineformset_factory(parent_model,
 
     if fields is None and exclude is None:
         related_fields = [f for f in model._meta.get_fields() if
-                          (f.one_to_many or f.one_to_one) and f.auto_created and not f.concrete]
+                          (f.one_to_many or f.one_to_one or f.many_to_many) and f.auto_created and not f.concrete]
         fields = [f.name for f in model._meta.get_fields() if f not in
                   related_fields]  # ignoring reverse relations
     kwargs = {
@@ -245,6 +245,7 @@ class ReverseModelAdmin(ModelAdmin):
                 formsets.append(formset)
             if form_validated and _formsets_are_blank(request, new_object, formsets):
                 self.save_model(request, new_object, form, change=not add)
+                form.save_m2m()
                 return self.response_add(request, new_object)
             elif form_validated and all_valid(formsets):
                 # Here is the modified code.
