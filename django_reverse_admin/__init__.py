@@ -205,8 +205,6 @@ class ReverseModelAdmin(ModelAdmin):
 
         model = self.model
         opts = model._meta
-        if not self.has_add_permission(request):
-            raise PermissionDenied
 
         model_form = self.get_form(request)
         formsets = []
@@ -219,8 +217,12 @@ class ReverseModelAdmin(ModelAdmin):
         else:
             obj = self.get_object(request, unquote(object_id))
 
-            if not self.has_view_permission(request, obj) and not self.has_change_permission(request, obj):
-                raise PermissionDenied
+            if request.method == 'POST':
+                if not self.has_change_permission(request, obj):
+                    raise PermissionDenied
+            else:
+                if not self.has_view_or_change_permission(request, obj):
+                    raise PermissionDenied
 
             if obj is None:
                 return self._get_obj_does_not_exist_redirect(request, opts, object_id)
