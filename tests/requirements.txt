@@ -1,4 +1,4 @@
-autopep8==1.4.4
+autopep8==1.5
 bleach==3.1.0
 bumpversion==0.5.3
 certifi==2019.11.28
