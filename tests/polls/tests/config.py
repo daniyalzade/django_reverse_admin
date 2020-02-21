@@ -80,3 +80,26 @@ PERSON_WITH_TWO_ADDRESSES = {
     'form-2-0-zipcode': '10006',
     '_save': 'Save'
 }
+
+PERSON_WITH_TWO_ADDRESSES_ONE_BLANK = {
+    'name': 'Elmo',
+    'form-TOTAL_FORMS': 1,
+    'form-INITIAL_FORMS': 0,
+    'form-MIN_NUM_FORMS': 0,
+    'form-MAX_NUM_FORMS': 1,
+    'form-0-street': 'South Park',
+    'form-0-street_2': 'No 1',
+    'form-0-city': 'San Francisco',
+    'form-0-state': 'CA',
+    'form-0-zipcode': '94110',
+    'form-2-TOTAL_FORMS': 1,
+    'form-2-INITIAL_FORMS': 0,
+    'form-2-MIN_NUM_FORMS': 0,
+    'form-2-MAX_NUM_FORMS': 1,
+    'form-2-0-street': '',
+    'form-2-0-street_2': '',
+    'form-2-0-city': '',
+    'form-2-0-state': '',
+    'form-2-0-zipcode': '',
+    '_save': 'Save'
+}
