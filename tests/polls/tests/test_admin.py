@@ -106,12 +106,21 @@ class PersonWithTwoAddressesAdminTest(TestCase):
         client.post(change_url, test_config.PERSON_WITH_TWO_ADDRESSES)
         self.assertEquals(1, PersonWithTwoAddresses.objects.count())
 
+    def test_add_person_with_two_addresses_one_blank(self):
+        self.assertEquals(0, PersonWithTwoAddresses.objects.count())
+
+        client = Client()
+        client.login(**test_config.ADMIN_USER)
+        change_url = reverse('admin:polls_personwithtwoaddresses_add')
+        client.post(change_url, test_config.PERSON_WITH_TWO_ADDRESSES_ONE_BLANK)
+        self.assertEquals(1, PersonWithTwoAddresses.objects.count())
+
 
 class AdminContextTest(TestCase):
     def setUp(self):
         User.objects.create_superuser(**test_config.ADMIN_USER)
 
-    def test_add_person_with_two_addresses(self):
+    def test_admin_header(self):
         self.assertEquals(0, PersonWithTwoAddresses.objects.count())
 
         client = Client()
