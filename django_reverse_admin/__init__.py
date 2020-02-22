@@ -44,6 +44,7 @@ class ReverseInlineFormSet(BaseModelFormSet):
 def _get_parent_fk_field(obj, formset):
     return next((f for f in obj._meta.fields if f.name == formset.parent_fk_name), None)
 
+
 def _remove_blank_reverse_inlines(obj, formsets):
     """
     Hacky implementation, but for some reasons blank inlines are being treated
