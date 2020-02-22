@@ -75,8 +75,6 @@ class PersonWithTwoAddresses(TemporalBase):
     name = models.CharField(max_length=255)
     age = models.IntegerField(blank=True, null=True)
     cur_addr = models.OneToOneField(Address,
-                                    blank=True,
-                                    null=True,
                                     related_name='cur_addr_person',
                                     on_delete=models.CASCADE
                                     )
