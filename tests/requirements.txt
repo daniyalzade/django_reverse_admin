@@ -3,7 +3,7 @@ bleach==3.1.1
 bumpversion==0.5.3
 certifi==2019.11.28
 chardet==3.0.4
-Django==3.0.3
+Django==3.0.4
 docutils==0.16
 entrypoints==0.3
 flake8==3.7.9
