@@ -316,7 +316,7 @@ class ReverseModelAdmin(ModelAdmin):
         # Inherit the default context from admin_site
         context = self.admin_site.each_context(request)
         reverse_admin_context = {
-            'title': _(('Change %s', 'Add %s')[add] % force_text(opts.verbose_name)),
+            'title': _(('Change %s', 'Add %s')[add]) % force_text(opts.verbose_name),
             'adminform': adminForm,
             # 'is_popup': '_popup' in request.REQUEST,
             'is_popup': False,
