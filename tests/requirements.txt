@@ -20,7 +20,7 @@ requests==2.23.0
 requests-toolbelt==0.9.1
 six==1.14.0
 sqlparse==0.3.0
-tqdm==4.43.0
+tqdm==4.44.1
 twine==3.1.1
 urllib3==1.25.8
 webencodings==0.5.1
