@@ -320,7 +320,7 @@ class ReverseModelAdmin(ModelAdmin):
             'adminform': adminForm,
             # 'is_popup': '_popup' in request.REQUEST,
             'is_popup': False,
-            'show_delete': False,
+            'original': obj,
             'media': mark_safe(media),
             'inline_admin_formsets': inline_admin_formsets,
             'errors': helpers.AdminErrorList(form, formsets),
@@ -329,4 +329,7 @@ class ReverseModelAdmin(ModelAdmin):
         }
         context.update(reverse_admin_context)
         context.update(extra_context or {})
-        return self.render_change_form(request, context, form_url=form_url, add=add)
+        return self.render_change_form(request, context, form_url=form_url,
+                                       add=add,
+                                       change=not add,
+                                       )
