@@ -250,6 +250,7 @@ class ReverseModelAdmin(ModelAdmin):
             formsets = _remove_blank_reverse_inlines(new_object, formsets)
             if form_validated and not formsets:
                 self.save_model(request, new_object, form, change=not add)
+                self.save_related(request, form, formsets, change=not add)
                 form.save_m2m()
                 return self.response_add(request, new_object)
             elif form_validated and all_valid(formsets):
@@ -266,6 +267,7 @@ class ReverseModelAdmin(ModelAdmin):
                     obj = forms[0].save()
                     setattr(new_object, inline.parent_fk_name, obj)
                 self.save_model(request, new_object, form, change=not add)
+                self.save_related(request, form, formsets, change=not add)
                 form.save_m2m()
                 for formset in formsets:
                     self.save_formset(request, form, formset, change=not add)
