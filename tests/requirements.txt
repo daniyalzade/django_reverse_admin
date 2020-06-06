@@ -6,7 +6,7 @@ chardet==3.0.4
 Django==3.0.7
 docutils==0.16
 entrypoints==0.3
-flake8==3.7.9
+flake8==3.8.2
 idna==2.9
 keyring==21.2.1
 mccabe==0.6.1
