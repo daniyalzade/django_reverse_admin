@@ -45,7 +45,7 @@ def _get_parent_fk_field(obj, formset):
     return next((f for f in obj._meta.fields if f.name == formset.parent_fk_name), None)
 
 
-def _remove_blank_reverse_inlines(obj, formsets):
+def _remove_blank_reverse_inlines(obj, formset_inline_tuples):
     """
     Hacky implementation, but for some reasons blank inlines are being treated
     as invalid. So, let's remove them from validation, since we know that they are
@@ -56,7 +56,7 @@ def _remove_blank_reverse_inlines(obj, formsets):
             return True
         field = _get_parent_fk_field(obj, formset)
         return not (field.blank and not formset.has_changed())
-    return [a for a in filter(lambda f: to_filter(f), formsets)]
+    return [a for a in filter(lambda t: to_filter(t[0]), formset_inline_tuples)]
 
 
 def reverse_inlineformset_factory(parent_model,
@@ -247,7 +247,9 @@ class ReverseModelAdmin(ModelAdmin):
                                   save_as_new="_saveasnew" in request.POST,
                                   prefix=prefix)
                 formsets.append(formset)
-            formsets = _remove_blank_reverse_inlines(new_object, formsets)
+            formset_inline_tuples = zip(formsets, self.get_inline_instances(request))
+            formset_inline_tuples = _remove_blank_reverse_inlines(new_object, formset_inline_tuples)
+            formsets = [t[0] for t in formset_inline_tuples]
             if form_validated and not formsets:
                 self.save_model(request, new_object, form, change=not add)
                 self.save_related(request, form, formsets, change=not add)
@@ -255,7 +257,7 @@ class ReverseModelAdmin(ModelAdmin):
                 return self.response_add(request, new_object)
             elif form_validated and all_valid(formsets):
                 # Here is the modified code.
-                for formset, inline in zip(formsets, self.get_inline_instances(request)):
+                for formset, inline in formset_inline_tuples:
                     if not isinstance(inline, ReverseInlineModelAdmin):
                         continue
                     # The idea or this piece is coming from https://stackoverflow.com/questions/50910152/inline-formset-returns-empty-list-on-save.
