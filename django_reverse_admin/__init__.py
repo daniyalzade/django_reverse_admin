@@ -338,4 +338,5 @@ class ReverseModelAdmin(ModelAdmin):
         return self.render_change_form(request, context, form_url=form_url,
                                        add=add,
                                        change=not add,
+                                       obj=obj,
                                        )
