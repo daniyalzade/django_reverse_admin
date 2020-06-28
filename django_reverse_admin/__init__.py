@@ -325,6 +325,7 @@ class ReverseModelAdmin(ModelAdmin):
             'adminform': adminForm,
             # 'is_popup': '_popup' in request.REQUEST,
             'is_popup': False,
+            'object_id': object_id,
             'original': obj,
             'media': mark_safe(media),
             'inline_admin_formsets': inline_admin_formsets,
