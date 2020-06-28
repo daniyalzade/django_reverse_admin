@@ -28,10 +28,12 @@ class PersonAdmin(ReverseModelAdmin):
         PhoneNumberInline
     ]
     inline_reverse = [
-        ('home_addr', {
-            'fields': ['street', 'city', 'state', 'zipcode'],
-            'readonly_fields': ('street',)
-        }),
+        {
+            'field_name': 'home_addr',
+            'kwargs': {
+                'fields': ['street', 'city', 'state', 'zipcode'],
+            },
+        }
     ]
 
 
