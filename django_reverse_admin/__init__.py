@@ -172,7 +172,11 @@ class ReverseModelAdmin(ModelAdmin):
             field = model._meta.get_field(field_name)
             if isinstance(field, (OneToOneField, ForeignKey)):
                 if admin_class:
+<<<<<<< Updated upstream
                     admin_class = type(
+=======
+                    admin_class_to_use = type(
+>>>>>>> Stashed changes
                         str('DynamicReverseInlineModelAdmin_{}'.format(admin_class.__name__)),
                         (admin_class, ReverseInlineModelAdmin),
                         {},
