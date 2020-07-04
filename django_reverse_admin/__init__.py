@@ -173,9 +173,9 @@ class ReverseModelAdmin(ModelAdmin):
             if isinstance(field, (OneToOneField, ForeignKey)):
                 if admin_class:
                     admin_class = type(
-                        str('DynamicReverseInlineModelAdmin'),
+                        str('DynamicReverseInlineModelAdmin_{}'.format(admin_class.__name__)),
                         (admin_class, ReverseInlineModelAdmin),
-                        dict(ReverseInlineModelAdmin.__dict__),
+                        {},
                     )
                 else:
                     admin_class = ReverseInlineModelAdmin
