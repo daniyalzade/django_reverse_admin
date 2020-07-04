@@ -99,6 +99,7 @@ class ReverseInlineModelAdmin(InlineModelAdmin):
                  parent_fk_name,
                  model, admin_site,
                  inline_type):
+        print("ReverseInlineModelAdmin constructor")
         self.template = 'admin/edit_inline/%s.html' % inline_type
         self.parent_fk_name = parent_fk_name
         self.model = model
@@ -152,6 +153,7 @@ class ReverseModelAdmin(ModelAdmin):
     def __init__(self, model, admin_site):
 
         super(ReverseModelAdmin, self).__init__(model, admin_site)
+        print("Constructor for: {}".format(model))
         if self.exclude is None:
             self.exclude = []
         self.exclude = list(self.exclude)
@@ -159,6 +161,7 @@ class ReverseModelAdmin(ModelAdmin):
         inline_instances = []
         for field_name in self.inline_reverse:
 
+            print(field_name, model)
             kwargs = {}
             admin_class = None
             if isinstance(field_name, tuple):
@@ -172,21 +175,23 @@ class ReverseModelAdmin(ModelAdmin):
             field = model._meta.get_field(field_name)
             if isinstance(field, (OneToOneField, ForeignKey)):
                 if admin_class:
-                    admin_class = type(
+                    admin_class_to_use = type(
                         str('DynamicReverseInlineModelAdmin'),
                         (admin_class, ReverseInlineModelAdmin),
-                        dict(ReverseInlineModelAdmin.__dict__),
+                        dict(admin_class.__dict__, **ReverseInlineModelAdmin.__dict__),
                     )
                 else:
-                    admin_class = ReverseInlineModelAdmin
+                    admin_class_to_use = ReverseInlineModelAdmin
 
                 name = field.name
                 parent = field.remote_field.model
-                inline = admin_class(model,
+                print("Calling initialize")
+                inline = admin_class_to_use(model,
                                      name,
                                      parent,
                                      admin_site,
                                      self.inline_type)
+                print("Finished initialize")
                 if kwargs:
                     inline.__dict__.update(kwargs)
                 inline_instances.append(inline)
