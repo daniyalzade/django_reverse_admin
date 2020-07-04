@@ -174,7 +174,7 @@ class ReverseModelAdmin(ModelAdmin):
                 if admin_class:
                     admin_class_to_use = type(
                         str('DynamicReverseInlineModelAdmin_{}'.format(admin_class.__name__)),
-                        (admin_class, ReverseInlineModelAdmin),
+                        (ReverseInlineModelAdmin, admin_class),
                         {},
                     )
                 else:
