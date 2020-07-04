@@ -172,21 +172,21 @@ class ReverseModelAdmin(ModelAdmin):
             field = model._meta.get_field(field_name)
             if isinstance(field, (OneToOneField, ForeignKey)):
                 if admin_class:
-                    admin_class = type(
-                        str('DynamicReverseInlineModelAdmin'),
-                        (admin_class, ReverseInlineModelAdmin),
-                        dict(ReverseInlineModelAdmin.__dict__),
+                    admin_class_to_use = type(
+                        str('DynamicReverseInlineModelAdmin_{}'.format(admin_class.__name__)),
+                        (ReverseInlineModelAdmin, admin_class),
+                        {},
                     )
                 else:
-                    admin_class = ReverseInlineModelAdmin
+                    admin_class_to_use = ReverseInlineModelAdmin
 
                 name = field.name
                 parent = field.remote_field.model
-                inline = admin_class(model,
-                                     name,
-                                     parent,
-                                     admin_site,
-                                     self.inline_type)
+                inline = admin_class_to_use(model,
+                                            name,
+                                            parent,
+                                            admin_site,
+                                            self.inline_type)
                 if kwargs:
                     inline.__dict__.update(kwargs)
                 inline_instances.append(inline)
