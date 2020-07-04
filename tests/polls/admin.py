@@ -5,6 +5,7 @@ from polls.models import Person
 from polls.models import PersonWithAddressNonId
 from polls.models import PersonWithTwoAddresses
 from polls.models import PhoneNumber
+from polls.models import CustomProfile
 from django_reverse_admin import ReverseModelAdmin
 
 
@@ -64,11 +65,24 @@ class AddressAdmin(admin.ModelAdmin):
                     )
 
 
+class CustomProfileAdmin(ReverseModelAdmin):
+    inline_type = 'tabular'
+    inline_reverse = [
+        ('secure_parking_alarm', {'fields': ['is_active', 'is_triggered']}),
+        ('hard_acceleration_alarm', {'fields': ['is_active', 'is_triggered']}),
+        ('hard_braking_alarm', {'fields': ['is_active', 'is_triggered']}),
+        ('trip_completed_alarm', {'fields': ['is_active', 'is_triggered']}),
+        ('towing_alarm', {'fields': ['is_active', 'is_triggered']}),
+        ('crash_alarm', {'fields': ['is_active', 'is_triggered']}),
+        ('iddle_engine_alarm', {'fields': ['is_active', 'is_triggered']}),
+    ]
+
 admin.site.register(Person, PersonAdmin)
 admin.site.register(PersonWithAddressNonId, PersonWithAddressNonIdAdmin)
 admin.site.register(PersonWithTwoAddresses, PersonWithTwoAddressesAdmin)
 admin.site.register(PhoneNumber, PhoneNumberAdmin)
 admin.site.register(NonInlinePerson, NonInlinePersonAdmin)
+admin.site.register(CustomProfile, CustomProfileAdmin)
 admin.site.register(Address, AddressAdmin)
 admin.site.site_header = SITE_HEADER
 admin.site.site_title = SITE_TITLE

@@ -102,3 +102,35 @@ class PhoneNumber(TemporalBase):
 class NonInlinePerson(Person):
     class Meta:
         proxy = True
+
+
+class Alarm(models.Model):
+    is_active = models.BooleanField(default=False)
+    is_triggered = models.BooleanField(default=False)
+
+class CustomProfile(models.Model):
+    secure_parking_alarm = models.OneToOneField(Alarm,
+                                                related_name='profile_as_secure_parking',
+                                                on_delete=models.CASCADE
+                                                )
+    hard_acceleration_alarm = models.OneToOneField(Alarm,
+                                                   related_name='profile_as_acceleration',
+                                                   on_delete=models.CASCADE
+                                                   )
+    hard_braking_alarm = models.OneToOneField(Alarm, related_name='profile_as_braking',
+                                                   on_delete=models.CASCADE
+                                                   )
+    trip_completed_alarm = models.OneToOneField(Alarm, related_name='profile_as_trip_completed',
+                                                   on_delete=models.CASCADE
+                                                   )
+    towing_alarm = models.OneToOneField(Alarm, related_name='profile_as_towing',
+                                        on_delete=models.CASCADE
+                                        )
+    crash_alarm = models.OneToOneField(Alarm, related_name='profile_as_crash',
+                                        on_delete=models.CASCADE
+                                        )
+    iddle_engine_alarm = models.OneToOneField(Alarm, related_name='profile_as_idle_engine',
+                                        on_delete=models.CASCADE
+                                        )
+
+
