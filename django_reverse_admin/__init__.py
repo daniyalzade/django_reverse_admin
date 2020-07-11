@@ -191,6 +191,8 @@ class ReverseModelAdmin(ModelAdmin):
                     inline.__dict__.update(kwargs)
                 inline_instances.append(inline)
                 self.exclude.append(name)
+
+        # These are the inline reverse instances for ReverseModelAdmin
         self.tmp_inline_instances = inline_instances
 
     def get_inline_instances(self, request, obj=None):
