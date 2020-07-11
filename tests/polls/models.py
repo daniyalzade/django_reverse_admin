@@ -16,7 +16,7 @@ class TemporalBase(models.Model):
 
 
 class AddressBase(TemporalBase):
-    street = models.CharField(max_length=255)
+    street = models.CharField(max_length=255, blank=True, null=True)
     street_2 = models.CharField(max_length=255, blank=True, null=True)
     zipcode = models.CharField(max_length=10)
     city = models.CharField(max_length=255)
