@@ -196,9 +196,10 @@ class ReverseModelAdmin(ModelAdmin):
         self.tmp_inline_instances = inline_instances
 
     def get_inline_instances(self, request, obj=None):
-        own = list(filter(lambda inline: inline.has_view_or_change_permission(request, obj) or
-                           inline.has_add_permission(request, obj) or
-                           inline.has_delete_permission(request, obj), self.tmp_inline_instances))
+        own = list(filter(
+            lambda inline: inline.has_view_or_change_permission(request, obj) or
+            inline.has_add_permission(request, obj) or
+            inline.has_delete_permission(request, obj), self.tmp_inline_instances))
         return own + super(ReverseModelAdmin, self).get_inline_instances(request, obj)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
