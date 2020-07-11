@@ -242,17 +242,7 @@ class ReverseModelAdmin(ModelAdmin):
                 new_object = self.save_form(request, form, change=not add)
             else:
                 new_object = form.instance
-            prefixes = {}
-            for FormSet, inline in self.get_formsets_with_inlines(request):
-                prefix = FormSet.get_default_prefix()
-                prefixes[prefix] = prefixes.get(prefix, 0) + 1
-                if prefixes[prefix] != 1:
-                    prefix = "%s-%s" % (prefix, prefixes[prefix])
-                formset = FormSet(data=request.POST, files=request.FILES,
-                                  instance=new_object,
-                                  save_as_new="_saveasnew" in request.POST,
-                                  prefix=prefix)
-                formsets.append(formset)
+            formsets, inline_instances = self._create_formsets(request, new_object, change=not add)
             formset_inline_tuples = zip(formsets, self.get_inline_instances(request))
             formset_inline_tuples = _remove_blank_reverse_inlines(new_object, formset_inline_tuples)
             formsets = [t[0] for t in formset_inline_tuples]
