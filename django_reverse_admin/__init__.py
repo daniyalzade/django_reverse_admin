@@ -208,6 +208,16 @@ class ReverseModelAdmin(ModelAdmin):
     def add_view(self, request, form_url='', extra_context=None):
         return self._changeform_view(request, None, form_url, extra_context)
 
+    def _save_object(self, request, new_object, form, formsets, add):
+        self.save_model(request, new_object, form, change=not add)
+        self.save_related(request, form, formsets, change=not add)
+        form.save_m2m()
+        change_message = self.construct_change_message(request, form, formsets, add)
+        if add:
+            self.log_addition(request, new_object, change_message)
+        else:
+            self.log_change(request, new_object, change_message)
+
     def _changeform_view(self, request, object_id, form_url, extra_context):
         add = object_id is None
 
@@ -247,9 +257,7 @@ class ReverseModelAdmin(ModelAdmin):
             formset_inline_tuples = _remove_blank_reverse_inlines(new_object, formset_inline_tuples)
             formsets = [t[0] for t in formset_inline_tuples]
             if form_validated and not formsets:
-                self.save_model(request, new_object, form, change=not add)
-                self.save_related(request, form, formsets, change=not add)
-                form.save_m2m()
+                self._save_object(request, new_object, form, formsets, add)
                 return self.response_add(request, new_object)
             elif form_validated and all_valid(formsets):
                 # Here is the modified code.
@@ -264,9 +272,7 @@ class ReverseModelAdmin(ModelAdmin):
                         continue
                     obj = forms[0].save()
                     setattr(new_object, inline.parent_fk_name, obj)
-                self.save_model(request, new_object, form, change=not add)
-                self.save_related(request, form, formsets, change=not add)
-                form.save_m2m()
+                self._save_object(request, new_object, form, formsets, add)
                 for formset in formsets:
                     self.save_formset(request, form, formset, change=not add)
 
