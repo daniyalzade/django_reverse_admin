@@ -194,7 +194,10 @@ class ReverseModelAdmin(ModelAdmin):
         self.tmp_inline_instances = inline_instances
 
     def get_inline_instances(self, request, obj=None):
-        return self.tmp_inline_instances + super(ReverseModelAdmin, self).get_inline_instances(request, obj)
+        own = list(filter(lambda inline: inline.has_view_or_change_permission(request, obj) or
+                           inline.has_add_permission(request, obj) or
+                           inline.has_delete_permission(request, obj), self.tmp_inline_instances))
+        return own + super(ReverseModelAdmin, self).get_inline_instances(request, obj)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         return self._changeform_view(request, object_id, form_url, extra_context)
@@ -310,13 +313,9 @@ class ReverseModelAdmin(ModelAdmin):
                                       )
         media = self.media + adminForm.media
 
-        inline_admin_formsets = []
-        for inline, formset in zip(self.get_inline_instances(request), formsets):
-            fieldsets = list(inline.get_fieldsets(request))
-            inline_admin_formset = helpers.InlineAdminFormSet(inline, formset, fieldsets,
-                                                              readonly_fields=readonly_fields)
-            inline_admin_formsets.append(inline_admin_formset)
-            media = media + inline_admin_formset.media
+        inline_admin_formsets = self.get_inline_formsets(request, formsets, self.get_inline_instances(request), obj)
+        for inline_formset in inline_admin_formsets:
+            media = media + inline_formset.media
 
         # Inherit the default context from admin_site
         context = self.admin_site.each_context(request)
