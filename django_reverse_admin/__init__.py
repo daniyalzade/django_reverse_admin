@@ -191,12 +191,15 @@ class ReverseModelAdmin(ModelAdmin):
                     inline.__dict__.update(kwargs)
                 inline_instances.append(inline)
                 self.exclude.append(name)
+
+        # These are the inline reverse instances for ReverseModelAdmin
         self.tmp_inline_instances = inline_instances
 
     def get_inline_instances(self, request, obj=None):
-        own = list(filter(lambda inline: inline.has_view_or_change_permission(request, obj) or
-                           inline.has_add_permission(request, obj) or
-                           inline.has_delete_permission(request, obj), self.tmp_inline_instances))
+        own = list(filter(
+            lambda inline: inline.has_view_or_change_permission(request, obj) or
+            inline.has_add_permission(request, obj) or
+            inline.has_delete_permission(request, obj), self.tmp_inline_instances))
         return own + super(ReverseModelAdmin, self).get_inline_instances(request, obj)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
@@ -239,17 +242,7 @@ class ReverseModelAdmin(ModelAdmin):
                 new_object = self.save_form(request, form, change=not add)
             else:
                 new_object = form.instance
-            prefixes = {}
-            for FormSet, inline in self.get_formsets_with_inlines(request):
-                prefix = FormSet.get_default_prefix()
-                prefixes[prefix] = prefixes.get(prefix, 0) + 1
-                if prefixes[prefix] != 1:
-                    prefix = "%s-%s" % (prefix, prefixes[prefix])
-                formset = FormSet(data=request.POST, files=request.FILES,
-                                  instance=new_object,
-                                  save_as_new="_saveasnew" in request.POST,
-                                  prefix=prefix)
-                formsets.append(formset)
+            formsets, inline_instances = self._create_formsets(request, new_object, change=not add)
             formset_inline_tuples = zip(formsets, self.get_inline_instances(request))
             formset_inline_tuples = _remove_blank_reverse_inlines(new_object, formset_inline_tuples)
             formsets = [t[0] for t in formset_inline_tuples]
