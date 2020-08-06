@@ -10,7 +10,7 @@ from django.forms.models import BaseModelFormSet, modelformset_factory
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, FieldDoesNotExist
 
 
 class ReverseInlineFormSet(BaseModelFormSet):
@@ -285,7 +285,7 @@ class ReverseModelAdmin(ModelAdmin):
             for k in initial:
                 try:
                     f = opts.get_field(k)
-                except models.FieldDoesNotExist:
+                except FieldDoesNotExist:
                     continue
                 if isinstance(f, models.ManyToManyField):
                     initial[k] = initial[k].split(",")
