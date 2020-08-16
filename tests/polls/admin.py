@@ -47,7 +47,10 @@ class PersonWithTwoAddressesAdmin(ReverseModelAdmin):
     list_display = ('name', 'age', 'cur_addr', 'oth_addr')
     inline_reverse = [
         ('cur_addr', {'fields': ['street', 'city', 'state', 'zipcode']}),
-        ('oth_addr', {'fields': ['street', 'city', 'state', 'zipcode']}),
+        ('oth_addr', {
+            'readonly_fields': ('zipcode',),
+            'fields': ['street', 'city', 'state', 'zipcode']
+        }),
     ]
 
 

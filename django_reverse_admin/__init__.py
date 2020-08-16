@@ -123,6 +123,7 @@ class ReverseInlineModelAdmin(InlineModelAdmin):
         # also, exclude starts as a tuple - need to make it a list
         exclude = list(kwargs.get("exclude", []))
         exclude_2 = self.exclude or []
+        exclude.extend(self.get_readonly_fields(request, obj))
         non_editable_fields = [f for f in self.model._meta.fields if not f.editable]
         exclude.extend(list(exclude_2))
         exclude.extend(non_editable_fields)
