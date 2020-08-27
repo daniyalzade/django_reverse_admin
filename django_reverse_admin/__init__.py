@@ -225,7 +225,7 @@ class ReverseModelAdmin(ModelAdmin):
         model = self.model
         opts = model._meta
 
-        model_form = self.get_form(request)
+        model_form = self.get_form(request, object_id)
         formsets = []
 
         if add:
