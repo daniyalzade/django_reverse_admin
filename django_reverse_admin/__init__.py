@@ -7,7 +7,7 @@ from django.db.models import OneToOneField, ForeignKey
 from django.forms import ModelForm
 from django.forms.formsets import all_valid
 from django.forms.models import BaseModelFormSet, modelformset_factory
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.core.exceptions import PermissionDenied, FieldDoesNotExist
@@ -320,7 +320,7 @@ class ReverseModelAdmin(ModelAdmin):
         # Inherit the default context from admin_site
         context = self.admin_site.each_context(request)
         reverse_admin_context = {
-            'title': _(('Change %s', 'Add %s')[add]) % force_text(opts.verbose_name),
+            'title': _(('Change %s', 'Add %s')[add]) % force_str(opts.verbose_name),
             'adminform': adminForm,
             # 'is_popup': '_popup' in request.REQUEST,
             'is_popup': False,
