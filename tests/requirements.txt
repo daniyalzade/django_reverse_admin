@@ -22,5 +22,5 @@ six==1.15.0
 sqlparse==0.4.1
 tqdm==4.51.0
 twine==3.2.0
-urllib3==1.25.10
+urllib3==1.25.11
 webencodings==0.5.1
