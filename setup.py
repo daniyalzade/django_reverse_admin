@@ -9,5 +9,6 @@ setup(
     long_description_content_type='text/markdown',
     classifiers=[
         "License :: OSI Approved :: BSD License",
-    ]
+    ],
+    python_requires='>=3',
 )
