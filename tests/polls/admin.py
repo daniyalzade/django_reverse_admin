@@ -34,6 +34,12 @@ class PersonAdmin(ReverseModelAdmin):
         }),
     ]
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj:  # edit
+            return self.readonly_fields + ('insurance_number',)
+        else:
+            return self.readonly_fields
+
 
 class PersonWithAddressNonIdAdmin(ReverseModelAdmin):
     list_display = ('name', 'home_addr')

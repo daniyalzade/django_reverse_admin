@@ -22,6 +22,7 @@ ADMIN_USER = {
 
 PERSON_WITH_ADDRESS = {
     'name': 'Elmo',
+    'insurance_number': 'INS_1',
     'form-TOTAL_FORMS': 1,
     'form-INITIAL_FORMS': 0,
     'form-MIN_NUM_FORMS': 0,
@@ -52,6 +53,15 @@ PERSON_WITH_ADDRESS_2 = {
 
 PERSON_WITH_NO_ADDRESS = {
     'name': 'Elmo',
+    'insurance_number': 'INS_1',
+    'form-TOTAL_FORMS': 1,
+    'form-INITIAL_FORMS': 0,
+    'phonenumber_set-TOTAL_FORMS': 0,
+    'phonenumber_set-INITIAL_FORMS': 1
+}
+
+PERSON_WITH_NO_ADDRESS_2 = {
+    'name': 'Elmo (Updated)',
     'form-TOTAL_FORMS': 1,
     'form-INITIAL_FORMS': 0,
     'phonenumber_set-TOTAL_FORMS': 0,

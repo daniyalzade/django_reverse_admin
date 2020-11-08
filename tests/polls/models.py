@@ -44,6 +44,7 @@ class Person(TemporalBase):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     age = models.IntegerField(blank=True, null=True)
+    insurance_number = models.CharField(max_length=30, help_text='An example field that can only be edited at object creation time')
     home_addr = models.OneToOneField(Address,
                                      blank=True,
                                      null=True,
