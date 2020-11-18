@@ -9,7 +9,7 @@ from django.forms.formsets import all_valid
 from django.forms.models import BaseModelFormSet, modelformset_factory
 from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.core.exceptions import PermissionDenied, FieldDoesNotExist
 
 
