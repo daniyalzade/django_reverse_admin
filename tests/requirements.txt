@@ -13,7 +13,7 @@ mccabe==0.6.1
 pkginfo==1.6.1
 pycodestyle==2.6.0
 pyflakes==2.2.0
-Pygments==2.7.2
+Pygments==2.8.0
 pytz==2020.4
 readme-renderer==28.0
 requests==2.25.0
