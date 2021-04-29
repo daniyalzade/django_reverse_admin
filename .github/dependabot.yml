@@ -1,0 +1,48 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/tests"
+  schedule:
+    interval: daily
+    time: "10:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: docutils
+    versions:
+    - "0.17"
+  - dependency-name: flake8
+    versions:
+    - 3.9.0
+  - dependency-name: idna
+    versions:
+    - "3.1"
+  - dependency-name: requests
+    versions:
+    - 2.25.1
+  - dependency-name: twine
+    versions:
+    - 3.3.0
+    - 3.4.0
+  - dependency-name: keyring
+    versions:
+    - 22.0.1
+    - 22.3.0
+    - 23.0.0
+  - dependency-name: tqdm
+    versions:
+    - 4.56.0
+    - 4.56.1
+    - 4.56.2
+    - 4.57.0
+    - 4.58.0
+  - dependency-name: pygments
+    versions:
+    - 2.7.4
+    - 2.8.0
+  - dependency-name: django
+    versions:
+    - 3.1.5
+    - 3.1.6
+  - dependency-name: pytz
+    versions:
+    - "2020.5"
