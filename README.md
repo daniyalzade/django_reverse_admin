@@ -95,7 +95,7 @@ Below is what an admin change_view with reverse inline looks like
 Below is what the same change_view would look like WITHOUT reverse inline
 ![no reverse inline](/images/admin_without_reverse_inline.png)
 
-# Contribtion
+# Contribution
 
 * Make sure that the tests are passing before opening up the PR
 * Create a PR for feature enhancements
