@@ -10,7 +10,7 @@ flake8==3.8.4
 idna==2.10
 keyring==23.0.1
 mccabe==0.6.1
-pkginfo==1.6.1
+pkginfo==1.7.1
 pycodestyle==2.6.0
 pyflakes==2.2.0
 Pygments==2.8.1
