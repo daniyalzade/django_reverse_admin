@@ -310,7 +310,7 @@ class ReverseModelAdmin(ModelAdmin):
             readonly_fields = self.get_readonly_fields(request, obj)
 
         adminForm = helpers.AdminForm(form,
-                                      list(self.get_fieldsets(request)),
+                                      list(self.get_fieldsets(request, obj)),
                                       self.prepopulated_fields,
                                       readonly_fields=readonly_fields,
                                       model_admin=self
