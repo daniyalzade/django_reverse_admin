@@ -1,7 +1,10 @@
+from unittest import mock
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
+from django.core.handlers.wsgi import WSGIRequest
 
 from polls.models import Address
 from polls.models import AddressNonId
@@ -10,7 +13,7 @@ from polls.models import PersonWithAddressNonId
 from polls.models import PersonWithTwoAddresses
 from polls.admin import SITE_HEADER
 import polls.tests.config as test_config
-
+from django_reverse_admin import ReverseModelAdmin
 
 class AddressAdminTest(TestCase):
     def setUp(self):
@@ -137,3 +140,20 @@ class AdminContextTest(TestCase):
         change_url = reverse('admin:polls_personwithtwoaddresses_add')
         res = client.get(change_url)
         self.assertTrue(SITE_HEADER in str(res.content), 'Custom header is set')
+
+    @mock.patch.object(ReverseModelAdmin, 'get_fieldsets')
+    def test_called_args(self, mock):
+        person = PersonWithAddressNonId.objects.create(name='Toto', home_addr=AddressNonId.objects.create())
+
+        client = Client()
+        client.login(**test_config.ADMIN_USER)
+        change_url = reverse('admin:polls_personwithaddressnonid_change', args=(person.pk,))
+        # Ensure it doesn't raise any exception.
+        client.get(change_url, test_config.PERSON_WITH_TWO_ADDRESSES)
+        self.assertEqual(mock.call_count, 2)
+        self.assertEqual(2, len(mock.call_args_list[0].args))
+        self.assertIsInstance(mock.call_args_list[0].args[0], WSGIRequest)
+        self.assertIsInstance(mock.call_args_list[0].args[1], PersonWithAddressNonId)
+        self.assertEqual(2, len(mock.call_args_list[1].args))
+        self.assertIsInstance(mock.call_args_list[1].args[0], WSGIRequest)
+        self.assertIsInstance(mock.call_args_list[1].args[1], PersonWithAddressNonId)
