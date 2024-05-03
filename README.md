@@ -72,7 +72,9 @@ class Person(models.Model):
 ```py
 from django.contrib import admin
 from django.db import models
-from models import Person
+
+from .models import Person
+
 from django_reverse_admin import ReverseModelAdmin
 
 class PersonAdmin(ReverseModelAdmin):
@@ -84,6 +86,51 @@ admin.site.register(Person, PersonAdmin)
 ```
 
 inline_type can be either "tabular" or "stacked" for tabular and stacked inlines respectively.
+
+#### Custom Form
+
+To use custom ``Form``, simply add a form key along with the fields.
+```py
+from .forms import CustomBusinessAddrForm
+
+class PersonAdmin(ReverseModelAdmin):
+    inline_type = 'tabular'
+    inline_reverse = [
+        ('home_addr', {
+            'fields': ['street', 'city', 'state', 'zipcode'],
+            'form': CustomBusinessAddrForm
+        }),
+     ]
+```
+
+#### Do not allow deletion
+
+django-reverse-admin uses the standard features of in-line forms (Stacked and Tabular). When used in the ReverseAdmin co-text, it releases the option to delete the associated object.
+
+To remove this option (thus making the object unable to be deleted), it is necessary to add the admin_class inheriting from one of the native resources (Stacked and Tabular). Example:
+
+```py
+from .forms import CustomBusinessAddrForm
+
+
+class BarInline(admin.StackedInline):
+    model = Address
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+class PersonAdmin(ReverseModelAdmin):
+    inline_type = 'tabular'
+    inline_reverse = [
+        'business_addr',
+        {
+            'field_name': 'home_addr',
+            'fields': ('zip_code',),
+            'admin_class': BarInline
+        }
+    ]
+```
 
 The module is designed to work with Django 2+ Since it hooks into the internals of the admin package, it may not work with later Django versions.
 
