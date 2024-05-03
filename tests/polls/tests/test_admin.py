@@ -15,6 +15,7 @@ from polls.admin import SITE_HEADER
 import polls.tests.config as test_config
 from django_reverse_admin import ReverseModelAdmin
 
+
 class AddressAdminTest(TestCase):
     def setUp(self):
         User.objects.create_superuser(**test_config.ADMIN_USER)
